@@ -38,7 +38,7 @@ const TimeDiv = styled.div`
   border: 1px solid orange;
 `;
 
-export default function Left() {
+export default function Left({data, setData, category}) {
   const [now, setNow] = useState();
 
   const date = new Date();
@@ -60,15 +60,26 @@ export default function Left() {
     };
   }, [now]);
 
+  let selected_value = document.getElementById('select')
+  const setDataByCategory = (e) => {
+    const value = selected_value.options[selected_value.selectedIndex].value
+    if(value !== 'none'){
+      setData(data.filter(el => el.sub_category === value))
+    } else {
+      setData(data)
+    }
+  }
+
   return (
     <LeftDiv>
       <SearchDiv>
         <SearchBar type="text"></SearchBar>
         <SearchImg src="https://www.svgrepo.com/show/532555/search.svg"></SearchImg>
       </SearchDiv>
-      <FilterDiv>
-        <FilterCombobox>
+      <FilterDiv onClick={setDataByCategory}>
+        <FilterCombobox id='select'>
           <option value="none">시설구분별</option>
+          {category.map(el => <option value={el}>{el}</option>)}
         </FilterCombobox>
         <FilterCombobox>
           <option value="none">지역별</option>
