@@ -5,7 +5,7 @@ import charger from "../data/data";
 const CenterDiv = styled.div`
   width: 60%;
   padding: 1%;
-  border: 1px solid green;
+  box-shadow: 0px 2px 1px #015aae;
 `;
 const UpperDiv = styled.div`
   display: flex;
@@ -16,50 +16,63 @@ const UpperLeftDiv = styled.div`
   display: flex;
   flex-direction: column;
   width: 50%;
-  border: 1px solid brown;
 `;
 const TypeDiv = styled.div`
   display: flex;
   flex-direction: row;
   width: 50%;
-  border: 1px solid aquamarine;
 `;
 const TypeButton = styled.div`
+  display: flex;
+  justify-content: center;
   width: 50%;
-  background-color: ${(props) => (props.selected ? "blue" : "white")};
+  background-color: ${(props) => (props.selected ? "#015aae" : "white")};
   color: ${(props) => (props.selected ? "white" : "black")};
+  border: 1px solid #015aae;
 `;
 const AddressDiv = styled.div`
   width: 90%;
-  border: 1px solid coral;
+  padding: 2% 0;
+  font-size: 1.2rem;
+  color: #015aae;
+  font-weight: bold;
 `;
 const UpperRightDiv = styled.div`
   display: flex;
   flex-direction: row;
   width: 50%;
-  border: 1px solid brown;
 `;
 const Chargers = styled.div`
   width: 50%;
   display: flex;
   flex-direction: column;
-  border: 1px solid coral;
+  justify-content: center;
+  align-items: center;
+  border: 2px solid #015aae;
 `;
 const SeveralChargers = styled.div`
   width: 100%;
+  height: 50%;
   display: flex;
   flex-direction: row;
-  border: 2px solid black;
+  border: 1px solid #015aae;
 `;
 const SeveralTypeDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;  
   width: 40%;
-  border: 1px solid purple;
+  border: 1px solid #015aae;
 `;
 const SeveralAmountDiv = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
   width: 60%;
-  border: 1px solid indigo;
+  border: 1px solid #015aae;
 `;
 const ChargerSpan = styled.span`
+  margin-bottom: 3%;
   font-size: ${(props) => props.size}rem;
   color: ${(props) => props.color};
 `;
@@ -296,7 +309,7 @@ export default function Center({ originData, filter, info, setInfo, keyword }) {
             <ChargerSpan size="0.8" color="black">
               충전기 대수
             </ChargerSpan>
-            <ChargerSpan size="1.2" color="blue">
+            <ChargerSpan size="1.5" color="#015aae">
               {data.length}
             </ChargerSpan>
           </Chargers>

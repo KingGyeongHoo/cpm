@@ -42,6 +42,13 @@ const FilterCombobox = styled.select`
     outline: none;
   }
 `;
+const FilterComboOption = styled.option`
+  color: black;
+  border: 1px solid #015aae;
+  &:focus{
+    outline: 1px solid #015aae;
+  }
+`
 const TimeDiv = styled.div`
   display: flex;
   justify-content: center;
@@ -108,15 +115,15 @@ export default function Left({category, town, setFilter, setKeyword}) {
       </SearchDiv>
       <FilterDiv>
         <FilterCombobox id='select_category' onChange={setDataByCategory}>
-          <option value="all">전체</option>
-          {category.map(el => <option value={el}>{el}</option>)}
+          <FilterComboOption value="all">전체</FilterComboOption>
+          {category.map(el => <FilterComboOption value={el}>{el}</FilterComboOption>)}
         </FilterCombobox>
         <FilterCombobox id='select_town' onChange={setDataByTown}>
-          <option value="all">전체</option>
-          {town.map(el => <option value={el}>{el}</option>)}
+          <FilterComboOption value="all">전체</FilterComboOption>
+          {town.map(el => <FilterComboOption value={el}>{el}</FilterComboOption>)}
         </FilterCombobox>
         <FilterCombobox>
-          <option value="none">요일별</option>
+          <FilterComboOption value="none">요일별</FilterComboOption>
         </FilterCombobox>
       </FilterDiv>
       <TimeDiv>{now}</TimeDiv>
