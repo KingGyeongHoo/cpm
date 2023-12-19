@@ -14,12 +14,16 @@ const MainContainer = styled.div`
 `
 export default function Main(){
   const [data, setData] = useState(charger.data)
-  const [category, setCategory] = useState([...new Set(charger.data.map(el => el.sub_category))])
+  const category = [...new Set(charger.data.map(el => el.main_category))]
+  const town = [...new Set(charger.data.map(el => el.town))]
+  const [filter, setFilter] = useState({category:'all', town:'all'})
+  const [keyword, setKeyword] = useState('')
+  console.log(keyword)
   const [info, setInfo] = useState({})
   return (
     <MainContainer>
-      <Left data={charger.data} setData={setData} category={category} />
-      <Center data={data} setData={setData} setInfo={setInfo} />
+      <Left category={category} town={town} setFilter={setFilter} setKeyword={setKeyword} />
+      <Center originData={charger.data} setData={setData} filter={filter} info={info} setInfo={setInfo} keyword={keyword}/>
       <Right data={charger.data} info={info} />
     </MainContainer>
   )

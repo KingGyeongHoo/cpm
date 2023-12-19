@@ -6,39 +6,53 @@ const LeftDiv = styled.div`
   flex-direction: column;
   width: 15%;
   padding: 1%;
-  border: 1px solid blue;
 `;
 const SearchDiv = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: space-between;
+  justify-content: space-evenly;
   width: 100%;
-  border: 1px solid red;
+  padding: 5% 0;
 `;
 const SearchBar = styled.input`
   width: 80%;
+  border: 0px;
+  border-bottom: 3px solid #015aae;
+  &:focus{
+    outline: none;
+  }
 `;
 const SearchImg = styled.img`
   width: 10%;
+  filter: invert(23%) sepia(95%) saturate(1263%) hue-rotate(188deg) brightness(100%) contrast(108%);
 `;
 const FilterDiv = styled.div`
   display: flex;
   flex-direction: column;
   width: 100%;
   padding: 1% 0;
-  border: 1px solid yellow;
 `;
 const FilterCombobox = styled.select`
   width: 100%;
   margin: 5% 0;
+  padding: 5% 0;
+  border: none;
+  border-bottom: 3px solid #015aae;
+  &:focus{
+    outline: none;
+  }
 `;
 const TimeDiv = styled.div`
   display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.5rem;
   width: 100%;
-  border: 1px solid orange;
+  padding: 20% 0;
+  border: 2px solid #015aae;
 `;
 
-export default function Left({data, setData, category}) {
+export default function Left({category, town, setFilter, setKeyword}) {
   const [now, setNow] = useState();
 
   const date = new Date();
@@ -59,30 +73,47 @@ export default function Left({data, setData, category}) {
       clearTimeout(intervalId);
     };
   }, [now]);
-
-  let selected_value = document.getElementById('select')
+  useEffect(() => {
+    
+  })
+  let select_category = document.getElementById('select_category')
   const setDataByCategory = (e) => {
-    const value = selected_value.options[selected_value.selectedIndex].value
-    if(value !== 'none'){
-      setData(data.filter(el => el.sub_category === value))
+    const value = select_category.options[select_category.selectedIndex].value
+    if(value !== 'all'){
+      setFilter(newFilter => ({...newFilter, category: value}))
     } else {
-      setData(data)
+      setFilter(newFilter => ({...newFilter, category: 'all'}))
     }
   }
+  let select_town = document.getElementById('select_town')
+  const setDataByTown = (e) => {
+    const value = select_town.options[select_town.selectedIndex].value
+    if(value !== 'all'){
+      setFilter(newFilter => ({...newFilter, town: value}))
+    } else {
+      setFilter(newFilter => ({...newFilter, town: 'all'}))
+    }
+  }
+  
+  const search = (e) => {
+    setKeyword(e.target.value)
+  }
+
 
   return (
     <LeftDiv>
       <SearchDiv>
-        <SearchBar type="text"></SearchBar>
         <SearchImg src="https://www.svgrepo.com/show/532555/search.svg"></SearchImg>
+        <SearchBar type="text" onChange={search}></SearchBar>
       </SearchDiv>
-      <FilterDiv onClick={setDataByCategory}>
-        <FilterCombobox id='select'>
-          <option value="none">시설구분별</option>
+      <FilterDiv>
+        <FilterCombobox id='select_category' onChange={setDataByCategory}>
+          <option value="all">전체</option>
           {category.map(el => <option value={el}>{el}</option>)}
         </FilterCombobox>
-        <FilterCombobox>
-          <option value="none">지역별</option>
+        <FilterCombobox id='select_town' onChange={setDataByTown}>
+          <option value="all">전체</option>
+          {town.map(el => <option value={el}>{el}</option>)}
         </FilterCombobox>
         <FilterCombobox>
           <option value="none">요일별</option>

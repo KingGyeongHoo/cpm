@@ -64,18 +64,91 @@ const ChargerSpan = styled.span`
   color: ${(props) => props.color};
 `;
 const MapDiv = styled.div`
+  position: relative;
   width: 100%;
   height: 40vh;
 `;
-const InfoContainer = styled.div`
-  width: 80%;
-  text-align: center;
-  padding: 10% 0;
+const ModalContainer = styled.div`
+  position: absolute;
+  display: ${props => props.openModal? 'flex' : 'none'};
+  width: 100%;
+  height: 100%;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0,0.5);
+  top: 0; 
+  left: 0;
+  z-index: 50;
 `;
-
+const ModalDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  justify-content: center;
+  align-items: center;
+  background-color: white;
+  border-radius: 30px;
+  padding: 2% 5% 5% 5%;
+  z-index: 100;
+`
+const ModalCloseDiv = styled.div`
+  width: 5%;
+  height: 5%;
+  margin-left: 100%;
+`
+const ModalCloseButton = styled.img`
+  width: 100%;
+`
+const ModalNameDiv = styled.div`
+  display: flex;
+  width: 60%;
+  justify-content: center;
+  align-items: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  margin: 2% 0;
+`
+const ModalListDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 80%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2%;
+`
+const ModalList = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 3% 5%;
+  z-index: 150;
+  border-radius: 20px;
+  &:hover{
+    background-color: rgba(0, 0, 0, 0.127);
+  }
+`
+const LocationName = styled.div`
+  width: 80%;
+`
+const UseableMark = styled.div`
+  width: 20px;
+  height: 20px;
+  margin: 0 1% 0 2%;
+  background-color: #35ec35;
+  border-radius: 100%;
+`
+const UseableText = styled.div`
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 13%;
+  font-size: 0.6rem;
+`
 const { kakao } = window;
 
-export default function Center({ data, setData, setInfo }) {
+export default function Center({ originData, filter, info, setInfo, keyword }) {
   const [type, setType] = useState();
   const clickButton = (e) => {
     if (e.target.innerHTML === "완속") {
@@ -84,12 +157,30 @@ export default function Center({ data, setData, setInfo }) {
       setType("fast");
     }
   };
+  const [data, setData] = useState(originData)
+  useEffect(() => {
+    if (filter.category === "all" && filter.town === "all") {
+      setData(originData);
+    } else if (filter.category !== "all" && filter.town === "all") {
+      setData(originData.filter((el) => el.main_category === filter.category));
+    } else if (filter.category === "all" && filter.town !== "all") {
+      setData(originData.filter(el => el.town === filter.town))
+    } else if (filter.category !== "all" && filter.town !== "all") {
+      setData(originData.filter(el => el.main_category === filter.category && el.town === filter.town))
+    }
+    if(keyword){
+      setData(originData.filter(el => el.location.includes(keyword)))
+    }
+  }, [filter, keyword]);
+  
+  
 
   const [level, setLevel] = useState(5);
   const [curLocation, setCurLocation] = useState([
     33.50678335808446, 126.49279871079412,
   ]);
   const [curAddress, setCurAddress] = useState('제주특별자치도 제주시 용담2동')
+  const [curChargerLocation, setCurChargerLocation] = useState()
 
   useEffect(() => {
     const container = document.getElementById("map");
@@ -131,7 +222,6 @@ export default function Center({ data, setData, setInfo }) {
             kakao.maps.event.addListener(marker, "mouseover", function () {
               // 마커에 마우스오버 이벤트가 발생하면 인포윈도우를 마커위에 표시합니다
               infowindow.open(map, marker);
-              console.log(map.getLevel());
             });
 
             // 마커에 마우스아웃 이벤트를 등록합니다
@@ -141,7 +231,8 @@ export default function Center({ data, setData, setInfo }) {
             });
             kakao.maps.event.addListener(marker, "click", function () {
               // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
-              setInfo(el)
+              setCurChargerLocation(el.location)
+              setOpenModal(true)
             });
           }
         }
@@ -178,6 +269,8 @@ export default function Center({ data, setData, setInfo }) {
       }    
   }
   }, [data]);
+
+  const [openModal, setOpenModal] = useState(false)
   return (
     <CenterDiv>
       <UpperDiv>
@@ -219,7 +312,27 @@ export default function Center({ data, setData, setInfo }) {
           </Chargers>
         </UpperRightDiv>
       </UpperDiv>
-      <MapDiv id="map"></MapDiv>
+      <MapDiv id="map">
+        <ModalContainer openModal={openModal}>
+          <ModalDiv>
+            <ModalCloseDiv onClick={() => setOpenModal(!openModal)}>
+              <ModalCloseButton src='https://www.svgrepo.com/show/521564/close.svg'></ModalCloseButton>
+            </ModalCloseDiv>
+            <ModalNameDiv>{curChargerLocation}</ModalNameDiv>
+            <ModalListDiv>
+              {data.filter(el => el.location === curChargerLocation).map(el => {
+                return(
+                  <ModalList onClick={() => setInfo(el)}>
+                    <LocationName>{el.charger_name}</LocationName>
+                    <UseableMark></UseableMark>
+                    <UseableText>사용가능</UseableText>
+                  </ModalList>
+                  )
+              })}
+            </ModalListDiv>
+          </ModalDiv>
+        </ModalContainer>
+      </MapDiv>
     </CenterDiv>
   );
 }
