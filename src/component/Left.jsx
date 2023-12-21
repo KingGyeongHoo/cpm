@@ -1,5 +1,6 @@
 import { styled } from "styled-components";
 import { useState, useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 const LeftDiv = styled.div`
   display: flex;
@@ -59,14 +60,14 @@ const TimeDiv = styled.div`
   border: 2px solid #015aae;
 `;
 
-export default function Left({category, town, setFilter, setKeyword}) {
+export default function Left({category, town}) {
   const [now, setNow] = useState();
 
   const date = new Date();
   const getNow = () => {
     const year = date.getFullYear().toString().padStart(2, "0");
     const month = (date.getMonth() + 1).toString().padStart(2, "0");
-    const day = date.getDay().toString().padStart(2, "0");
+    const day = date.getDate().toString().padStart(2, "0");
     const hour = date.getHours().toString().padStart(2, "0");
     const minute = date.getMinutes().toString().padStart(2, "0");
     const second = date.getSeconds().toString().padStart(2, "0");
@@ -83,27 +84,30 @@ export default function Left({category, town, setFilter, setKeyword}) {
   useEffect(() => {
     
   })
+  const dispatch = useDispatch()
+  const filter = useSelector(state => state)
   let select_category = document.getElementById('select_category')
   const setDataByCategory = (e) => {
     const value = select_category.options[select_category.selectedIndex].value
     if(value !== 'all'){
-      setFilter(newFilter => ({...newFilter, category: value}))
+      dispatch({type:'SelectCategory', payload:{...filter, category: value}})
     } else {
-      setFilter(newFilter => ({...newFilter, category: 'all'}))
+      dispatch({type:'AllCategory', payload:{...filter, category: ''}})
     }
   }
   let select_town = document.getElementById('select_town')
   const setDataByTown = (e) => {
     const value = select_town.options[select_town.selectedIndex].value
     if(value !== 'all'){
-      setFilter(newFilter => ({...newFilter, town: value}))
+      dispatch({type:'SelectTown', payload:{...filter, town: value}})
     } else {
-      setFilter(newFilter => ({...newFilter, town: 'all'}))
+      dispatch({type:'AllTown', payload:{...filter, town: ''}})
     }
   }
   
   const search = (e) => {
-    setKeyword(e.target.value)
+    const typed = e.target.value
+    dispatch({type:'Search', payload:{...filter, keyword: typed}})
   }
 
 
@@ -115,11 +119,11 @@ export default function Left({category, town, setFilter, setKeyword}) {
       </SearchDiv>
       <FilterDiv>
         <FilterCombobox id='select_category' onChange={setDataByCategory}>
-          <FilterComboOption value="all">전체</FilterComboOption>
+          <FilterComboOption value="all">시설 구분</FilterComboOption>
           {category.map(el => <FilterComboOption value={el}>{el}</FilterComboOption>)}
         </FilterCombobox>
         <FilterCombobox id='select_town' onChange={setDataByTown}>
-          <FilterComboOption value="all">전체</FilterComboOption>
+          <FilterComboOption value="all">지역</FilterComboOption>
           {town.map(el => <FilterComboOption value={el}>{el}</FilterComboOption>)}
         </FilterCombobox>
         <FilterCombobox>

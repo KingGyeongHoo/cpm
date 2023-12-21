@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { useDispatch, useSelector } from "react-redux";
 import charger from "../data/data";
 
 const CenterDiv = styled.div`
@@ -60,7 +61,7 @@ const SeveralChargers = styled.div`
 const SeveralTypeDiv = styled.div`
   display: flex;
   justify-content: center;
-  align-items: center;  
+  align-items: center;
   width: 40%;
   border: 1px solid #015aae;
 `;
@@ -79,39 +80,39 @@ const ChargerSpan = styled.span`
 const MapDiv = styled.div`
   position: relative;
   width: 100%;
-  height: 40vh;
+  height: 60vh;
 `;
 const ModalContainer = styled.div`
   position: absolute;
-  display: ${props => props.openModal? 'flex' : 'none'};
+  display: ${(props) => (props.openModal ? "flex" : "none")};
   width: 100%;
   height: 100%;
   justify-content: center;
   align-items: center;
-  background-color: rgba(0,0,0,0.5);
-  top: 0; 
+  background-color: rgba(0, 0, 0, 0.5);
+  top: 0;
   left: 0;
   z-index: 50;
 `;
 const ModalDiv = styled.div`
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 60%;
   justify-content: center;
   align-items: center;
   background-color: white;
   border-radius: 30px;
   padding: 2% 5% 5% 5%;
   z-index: 100;
-`
+`;
 const ModalCloseDiv = styled.div`
   width: 5%;
   height: 5%;
   margin-left: 100%;
-`
+`;
 const ModalCloseButton = styled.img`
   width: 100%;
-`
+`;
 const ModalNameDiv = styled.div`
   display: flex;
   width: 60%;
@@ -120,7 +121,7 @@ const ModalNameDiv = styled.div`
   font-size: 1.2rem;
   font-weight: 700;
   margin: 2% 0;
-`
+`;
 const ModalListDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -128,7 +129,23 @@ const ModalListDiv = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 2%;
+`;
+const ModalDivided = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+  justify-content: center;
+  align-items: center;
+  margin-top: 2%;
 `
+const ModalListDividedDiv = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 50%;
+  justify-content: center;
+  align-items: baseline;
+  margin: 2% 2% 0 2%;
+`;
 const ModalList = styled.div`
   display: flex;
   flex-direction: row;
@@ -138,62 +155,52 @@ const ModalList = styled.div`
   padding: 3% 5%;
   z-index: 150;
   border-radius: 20px;
-  &:hover{
+  &:hover {
     background-color: rgba(0, 0, 0, 0.127);
   }
-`
+`;
 const LocationName = styled.div`
-  width: 80%;
-`
+  width: 90%;
+`;
 const UseableMark = styled.div`
   width: 20px;
   height: 20px;
   margin: 0 1% 0 2%;
   background-color: #35ec35;
   border-radius: 100%;
-`
-const UseableText = styled.div`
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  width: 13%;
-  font-size: 0.6rem;
-`
+`;
 const { kakao } = window;
 
-export default function Center({ originData, filter, info, setInfo, keyword }) {
-  const [type, setType] = useState();
+export default function Center({ setInfo }) {
+  const originData = charger.data
+  const dispatch = useDispatch()
+  const filter = useSelector((state) => state);
   const clickButton = (e) => {
-    if (e.target.innerHTML === "완속") {
-      setType("slow");
+    if (e.target.innerHTML === "전체") {
+      dispatch({type: 'showAllType', payload:{ ...filter, type: "" }})
+    } else if(e.target.innerHTML === "완속"){
+      dispatch({type: 'onlySlowType', payload:{ ...filter, type: "완속" }})
     } else {
-      setType("fast");
+      dispatch({type: 'onlyFastType', payload:{ ...filter, type: "급속" }})
     }
   };
-  const [data, setData] = useState(originData)
+  const [data, setData] = useState(originData);
+  console.log(filter)
   useEffect(() => {
-    if (filter.category === "all" && filter.town === "all") {
+    if (filter.category === "" && filter.town === "" && filter.type === '' && filter.keyword === '') {
       setData(originData);
-    } else if (filter.category !== "all" && filter.town === "all") {
-      setData(originData.filter((el) => el.main_category === filter.category));
-    } else if (filter.category === "all" && filter.town !== "all") {
-      setData(originData.filter(el => el.town === filter.town))
-    } else if (filter.category !== "all" && filter.town !== "all") {
-      setData(originData.filter(el => el.main_category === filter.category && el.town === filter.town))
+    } else {
+      setData(originData.filter(el => el.main_category.includes(filter.category) && 
+      el.town.includes(filter.town) && el.type.includes(filter.type) && el.location.includes(filter.keyword)));
     }
-    if(keyword){
-      setData(originData.filter(el => el.location.includes(keyword)))
-    }
-  }, [filter, keyword]);
-  
-  
+  }, [filter]);
 
   const [level, setLevel] = useState(5);
   const [curLocation, setCurLocation] = useState([
     33.50678335808446, 126.49279871079412,
   ]);
-  const [curAddress, setCurAddress] = useState('제주특별자치도 제주시 용담2동')
-  const [curChargerLocation, setCurChargerLocation] = useState()
+  const [curAddress, setCurAddress] = useState("제주특별자치도 제주시 용담2동");
+  const [curChargerLocation, setCurChargerLocation] = useState();
 
   useEffect(() => {
     const container = document.getElementById("map");
@@ -244,8 +251,8 @@ export default function Center({ originData, filter, info, setInfo, keyword }) {
             });
             kakao.maps.event.addListener(marker, "click", function () {
               // 마커에 마우스아웃 이벤트가 발생하면 인포윈도우를 제거합니다
-              setCurChargerLocation(el.location)
-              setOpenModal(true)
+              setCurChargerLocation(el.location);
+              setOpenModal(true);
             });
           }
         }
@@ -271,32 +278,38 @@ export default function Center({ originData, filter, info, setInfo, keyword }) {
     }
     function displayCenterInfo(result, status) {
       if (status === kakao.maps.services.Status.OK) {
-
-          for(var i = 0; i < result.length; i++) {
-              // 행정동의 region_type 값은 'H' 이므로
-              if (result[i].region_type === 'H') {
-                  setCurAddress(result[i].address_name)
-                  break;
-              }
+        for (var i = 0; i < result.length; i++) {
+          // 행정동의 region_type 값은 'H' 이므로
+          if (result[i].region_type === "H") {
+            setCurAddress(result[i].address_name);
+            break;
           }
-      }    
-  }
+        }
+      }
+    }
   }, [data]);
 
-  const [openModal, setOpenModal] = useState(false)
+  const filteredData = data.filter((el) => el.location === curChargerLocation);
+  const [openModal, setOpenModal] = useState(false);
   return (
     <CenterDiv>
       <UpperDiv>
         <UpperLeftDiv>
           <TypeDiv>
+          <TypeButton
+              selected={filter.type === "" ? true : false}
+              onClick={clickButton}
+            >
+              전체
+            </TypeButton>
             <TypeButton
-              selected={type === "slow" ? true : false}
+              selected={filter.type === "완속" ? true : false}
               onClick={clickButton}
             >
               완속
             </TypeButton>
             <TypeButton
-              selected={type === "fast" ? true : false}
+              selected={filter.type === "급속" ? true : false}
               onClick={clickButton}
             >
               급속
@@ -316,11 +329,15 @@ export default function Center({ originData, filter, info, setInfo, keyword }) {
           <Chargers>
             <SeveralChargers>
               <SeveralTypeDiv>완속</SeveralTypeDiv>
-              <SeveralAmountDiv>{data.filter(el => el.type ==='완속').length}</SeveralAmountDiv>
+              <SeveralAmountDiv>
+                {data.filter((el) => el.type === "완속").length}
+              </SeveralAmountDiv>
             </SeveralChargers>
             <SeveralChargers>
               <SeveralTypeDiv>급속</SeveralTypeDiv>
-              <SeveralAmountDiv>{data.filter(el => el.type.includes('급속')).length}</SeveralAmountDiv>
+              <SeveralAmountDiv>
+                {data.filter((el) => el.type.includes("급속")).length}
+              </SeveralAmountDiv>
             </SeveralChargers>
           </Chargers>
         </UpperRightDiv>
@@ -329,20 +346,44 @@ export default function Center({ originData, filter, info, setInfo, keyword }) {
         <ModalContainer openModal={openModal}>
           <ModalDiv>
             <ModalCloseDiv onClick={() => setOpenModal(!openModal)}>
-              <ModalCloseButton src='https://www.svgrepo.com/show/521564/close.svg'></ModalCloseButton>
+              <ModalCloseButton src="https://www.svgrepo.com/show/521564/close.svg"></ModalCloseButton>
             </ModalCloseDiv>
             <ModalNameDiv>{curChargerLocation}</ModalNameDiv>
-            <ModalListDiv>
-              {data.filter(el => el.location === curChargerLocation).map(el => {
-                return(
-                  <ModalList onClick={() => setInfo(el)}>
-                    <LocationName>{el.charger_name}</LocationName>
-                    <UseableMark></UseableMark>
-                    <UseableText>사용가능</UseableText>
-                  </ModalList>
-                  )
-              })}
-            </ModalListDiv>
+            {filteredData.length < 6 ? (
+              <ModalListDiv>
+                {filteredData.map((el) => {
+                  return (
+                    <ModalList onClick={() => setInfo(el)}>
+                      <LocationName>{el.charger_name}</LocationName>
+                      <UseableMark></UseableMark>
+                    </ModalList>
+                  );
+                })}
+              </ModalListDiv>
+            ) : (
+              <ModalDivided>
+                <ModalListDividedDiv>
+                  {filteredData.slice(0, parseInt(filteredData.length/2)).map((el) => {
+                    return (
+                      <ModalList onClick={() => setInfo(el)}>
+                        <LocationName>{el.charger_name}</LocationName>
+                        <UseableMark></UseableMark>
+                      </ModalList>
+                    );
+                  })}
+                </ModalListDividedDiv>
+                <ModalListDividedDiv>
+                {filteredData.slice(parseInt(filteredData.length/2)).map((el) => {
+                  return (
+                    <ModalList onClick={() => setInfo(el)}>
+                      <LocationName>{el.charger_name}</LocationName>
+                      <UseableMark></UseableMark>
+                    </ModalList>
+                  );
+                })}
+              </ModalListDividedDiv>
+            </ModalDivided>
+            )}
           </ModalDiv>
         </ModalContainer>
       </MapDiv>
