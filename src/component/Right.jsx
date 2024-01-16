@@ -1,6 +1,4 @@
 import { styled } from "styled-components";
-import React, { useEffect, useState } from 'react';
-import AWS from 'aws-sdk';
 
 const RightDiv = styled.div`
   display: flex;
@@ -31,36 +29,6 @@ const InfoDetail = styled.div`
   font-size: 1.1rem;
 `
 export default function Right({info}){
-
-  const [data, setData] = useState([]);
-
-  useEffect(() => {
-    // AWS 설정
-    AWS.config.update({
-      region: 'area',
-      accessKeyId: 'id',
-      secretAccessKey: 'key',
-    });
-
-    // S3 객체 생성
-    const s3 = new AWS.S3();
- 
-    // S3에서 파일 읽기
-    const params = { Bucket: 'route', Key: 'file' };
-
-    s3.getObject(params, (err, result) => {
-      if (err) {
-        console.error('Error fetching data from S3:', err);
-      } else {
-      console.log('success')
-        const fileContent = result.Body.toString('utf-8');
-        const parsedData = JSON.parse(fileContent);
-        setData(parsedData);
-      }
-    });
-  }, []); // useEffect는 최초 렌더링 시에만 호출되도록 빈 배열을 전달
-
-  console.log(data)
   return(
     <RightDiv>
       <InfoDiv>

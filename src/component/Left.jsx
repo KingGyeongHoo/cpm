@@ -120,11 +120,11 @@ export default function Left({category, town}) {
       <FilterDiv>
         <FilterCombobox id='select_category' onChange={setDataByCategory}>
           <FilterComboOption value="all">시설 구분</FilterComboOption>
-          {category.map(el => <FilterComboOption value={el}>{el}</FilterComboOption>)}
+          {category.map(el => <FilterComboOption value={el} key={el}>{el}</FilterComboOption>)}
         </FilterCombobox>
         <FilterCombobox id='select_town' onChange={setDataByTown}>
           <FilterComboOption value="all">지역</FilterComboOption>
-          {town.map(el => <FilterComboOption value={el}>{el}</FilterComboOption>)}
+          {town.map(el => <FilterComboOption value={el} key={el}>{el}</FilterComboOption>)}
         </FilterCombobox>
         <FilterCombobox>
           <FilterComboOption value="none">요일별</FilterComboOption>

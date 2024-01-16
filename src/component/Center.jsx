@@ -1,7 +1,6 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
-import charger from "../data/data";
 
 const CenterDiv = styled.div`
   width: 60%;
@@ -171,8 +170,9 @@ const UseableMark = styled.div`
 `;
 const { kakao } = window;
 
-export default function Center({ setInfo }) {
-  const originData = charger.data
+export default function Center({ setInfo, serverData }) {
+  const originData = serverData
+
   const dispatch = useDispatch()
   const filter = useSelector((state) => state);
   const clickButton = (e) => {
@@ -193,7 +193,7 @@ export default function Center({ setInfo }) {
       setData(originData.filter(el => el.main_category.includes(filter.category) && 
       el.town.includes(filter.town) && el.type.includes(filter.type) && el.location.includes(filter.keyword)));
     }
-  }, [filter]);
+  }, [originData, filter]);
 
   const [level, setLevel] = useState(5);
   const [curLocation, setCurLocation] = useState([
