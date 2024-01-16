@@ -54,7 +54,7 @@ const TimeDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 1.5rem;
+  font-size: 3vh;
   width: 100%;
   padding: 20% 0;
   border: 2px solid #015aae;
