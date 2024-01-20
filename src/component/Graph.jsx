@@ -31,7 +31,7 @@ export default function Graph({ info }) {
     const s3 = new AWS.S3();
 
     // S3에서 파일 읽기
-    const params = { Bucket: "chargers-list/useage-record", Key: "data.json" };
+    const params = { Bucket: "chargers-list/useage-record", Key: "usageData.json" };
 
     s3.getObject(params, (err, result) => {
       if (err) {
@@ -52,22 +52,25 @@ export default function Graph({ info }) {
         day: day,
         충전시간: Math.round(
           data
-            .filter((el) => el.chargeday === day)
-            .reduce((acc, cur) => acc + cur.chargeminute, 0)
-        ),
-        충전비용: Math.round(
-          data
-            .filter((el) => el.chargeday === day)
-            .reduce((acc, cur) => acc + cur.cost, 0)
-        ),
-        사용량: Math.round(
-          data
-            .filter((el) => el.chargeday === day)
-            .reduce((acc, cur) => acc + cur.used, 0)
-        ),
-      };
+            .filter((el) => el.date === day)
+            .reduce((acc, cur) => acc + cur.minute, 0)
+        )
+      }
     }
   );
+  const monthDay= Array.from({length: 31}, (_, i) => i + 1).map(
+    (day) =>{
+      return{
+        day: day.toString()+"일",
+        일별충전량: Math.round(
+          data
+          .filter(el => parseInt(el.start_date.slice(5, 7)) === day)
+          .reduce((acc, cur) => acc + cur.useage, 0)
+        )
+      }
+    }
+  )
+  console.log(monthDay)
 
   return (
     <>
@@ -84,16 +87,16 @@ export default function Graph({ info }) {
       </GraphDiv>
       <GraphDiv>
         <ResponsiveContainer width='100%' aspect={4.0/3.0}>
-          <TitleDiv>충전비용</TitleDiv>
+          <TitleDiv>일별 충전</TitleDiv>
           <BarChart width={500} height={500} data={dataPerDay}>
             <XAxis dataKey="day" />
             <Tooltip />
-            <Bar dataKey="충전비용" fill="#0a955b">
+            <Bar dataKey="일별충전" fill="#0a955b">
             </Bar>
           </BarChart>
         </ResponsiveContainer>
       </GraphDiv>
-      <GraphDiv>
+      {/* <GraphDiv>
         <ResponsiveContainer width='100%' aspect={4.0/3.0}>
           <TitleDiv>사용량</TitleDiv>
           <BarChart width={500} height={500} data={dataPerDay}>
@@ -103,7 +106,7 @@ export default function Graph({ info }) {
             </Bar>
           </BarChart>
         </ResponsiveContainer>
-      </GraphDiv>
+      </GraphDiv> */}
     </>
   );
 }
