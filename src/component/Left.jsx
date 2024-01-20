@@ -54,7 +54,7 @@ const TimeDiv = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  font-size: 3vh;
+  font-size: ${props => props.fontSize}px;
   width: 100%;
   padding: 20% 0;
   border: 2px solid #015aae;
@@ -110,7 +110,11 @@ export default function Left({category, town}) {
     dispatch({type:'Search', payload:{...filter, keyword: typed}})
   }
 
-
+  const [windowSize, setWindowSize] = useState(window.innerWidth)
+  useEffect(() => {
+    setWindowSize(window.innerWidth/100 + 5)
+  }, [window.innerWidth])
+  console.log(window.innerWidth)
   return (
     <LeftDiv>
       <SearchDiv>
@@ -130,7 +134,7 @@ export default function Left({category, town}) {
           <FilterComboOption value="none">요일별</FilterComboOption>
         </FilterCombobox>
       </FilterDiv>
-      <TimeDiv>{now}</TimeDiv>
+      <TimeDiv fontSize={windowSize}>{now}</TimeDiv>
     </LeftDiv>
   );
 }

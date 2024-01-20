@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import { BarChart, Bar, XAxis, Tooltip, LabelList } from "recharts";
+import { BarChart, Bar, XAxis, Tooltip, LabelList, ResponsiveContainer} from "recharts";
 import AWS from "aws-sdk";
 
 const GraphDiv = styled.div`
@@ -44,7 +44,7 @@ export default function Graph({ info }) {
         setData(filteredData);
       }
     });
-  }, [info]); // useEffect는 최초 렌더링 시에만 호출되도록 빈 배열을 전달
+  }, [info]);
 
   const dataPerDay = ["월요일", "화요일", "수요일", "목요일", "금요일"].map(
     (day) => {
@@ -72,31 +72,37 @@ export default function Graph({ info }) {
   return (
     <>
       <GraphDiv>
-        <TitleDiv>충전시간</TitleDiv>
-        <BarChart width={500} height={500} data={dataPerDay}>
-          <XAxis dataKey="day" />
-          <Tooltip />
-          <Bar dataKey="충전시간" fill="#f0cc20">
-          </Bar>
-        </BarChart>
+      <ResponsiveContainer width='100%' aspect={4.0/3.0}>
+          <TitleDiv>충전시간</TitleDiv>
+          <BarChart data={dataPerDay}>
+            <XAxis dataKey="day" />
+            <Tooltip />
+            <Bar dataKey="충전시간" fill="#f0cc20">
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
       </GraphDiv>
       <GraphDiv>
-        <TitleDiv>충전비용</TitleDiv>
-        <BarChart width={500} height={500} data={dataPerDay}>
-          <XAxis dataKey="day" />
-          <Tooltip />
-          <Bar dataKey="충전비용" fill="#0a955b">
-          </Bar>
-        </BarChart>
+        <ResponsiveContainer width='100%' aspect={4.0/3.0}>
+          <TitleDiv>충전비용</TitleDiv>
+          <BarChart width={500} height={500} data={dataPerDay}>
+            <XAxis dataKey="day" />
+            <Tooltip />
+            <Bar dataKey="충전비용" fill="#0a955b">
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
       </GraphDiv>
       <GraphDiv>
-        <TitleDiv>사용량</TitleDiv>
-        <BarChart width={500} height={500} data={dataPerDay}>
-          <XAxis dataKey="day" />
-          <Tooltip />
-          <Bar dataKey="사용량" fill="#4a0a7b">
-          </Bar>
-        </BarChart>
+        <ResponsiveContainer width='100%' aspect={4.0/3.0}>
+          <TitleDiv>사용량</TitleDiv>
+          <BarChart width={500} height={500} data={dataPerDay}>
+            <XAxis dataKey="day" />
+            <Tooltip />
+            <Bar dataKey="사용량" fill="#4a0a7b">
+            </Bar>
+          </BarChart>
+        </ResponsiveContainer>
       </GraphDiv>
     </>
   );
