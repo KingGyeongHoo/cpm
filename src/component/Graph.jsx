@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
-import { BarChart, Bar, XAxis, Tooltip, LabelList, ResponsiveContainer} from "recharts";
+import { BarChart, Bar, AreaChart, Area, ReferenceLine, XAxis, Tooltip, LabelList, ResponsiveContainer} from "recharts";
 import AWS from "aws-sdk";
 
 const GraphDiv = styled.div`
@@ -58,19 +58,19 @@ export default function Graph({ info }) {
       }
     }
   );
-  const monthDay= Array.from({length: 31}, (_, i) => i + 1).map(
+  const monthDay= Array.from({length: 15}, (_, i) => i + 1).map(
     (day) =>{
+      const dayData = data.filter(el => parseInt(el.start_date.slice(5, 7)) === day)
       return{
         day: day.toString()+"일",
-        일별충전량: Math.round(
-          data
-          .filter(el => parseInt(el.start_date.slice(5, 7)) === day)
-          .reduce((acc, cur) => acc + cur.useage, 0)
-        )
+        이용률: dayData.length > 0 ? 
+        Math.round(
+          dayData.reduce((acc, cur) => acc + cur.minute, 0)/(dayData.length*1440) * 100
+        ) : 0
       }
     }
   )
-  console.log(monthDay)
+  console.log(data)
 
   return (
     <>
@@ -87,13 +87,14 @@ export default function Graph({ info }) {
       </GraphDiv>
       <GraphDiv>
         <ResponsiveContainer width='100%' aspect={4.0/3.0}>
-          <TitleDiv>일별 충전</TitleDiv>
-          <BarChart width={500} height={500} data={dataPerDay}>
+          <TitleDiv>일별 이용률</TitleDiv>
+          <AreaChart data={monthDay}>
             <XAxis dataKey="day" />
             <Tooltip />
-            <Bar dataKey="일별충전" fill="#0a955b">
-            </Bar>
-          </BarChart>
+            <ReferenceLine x={50} stroke="red" label="Max PV PAGE" />
+            <Area type="monotone" dataKey="이용률" fill="#0a955b">
+            </Area>
+          </AreaChart>
         </ResponsiveContainer>
       </GraphDiv>
       {/* <GraphDiv>
