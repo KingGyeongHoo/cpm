@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { useDispatch, useSelector } from "react-redux";
 
 const CenterDiv = styled.div`
-  width: 60%;
+  width: 80%;
   padding: 1%;
   box-shadow: 0px 2px 1px #015aae;
 `;
@@ -79,7 +79,7 @@ const ChargerSpan = styled.span`
 const MapDiv = styled.div`
   position: relative;
   width: 100%;
-  height: 60vh;
+  height: 70vh;
 `;
 const ModalContainer = styled.div`
   position: absolute;
@@ -101,7 +101,7 @@ const ModalDiv = styled.div`
   align-items: center;
   background-color: white;
   border-radius: 30px;
-  padding: 2% 5% 5% 5%;
+  padding: 1% 5% 2% 5%;
   z-index: 100;
 `;
 const ModalCloseDiv = styled.div`
@@ -119,7 +119,6 @@ const ModalNameDiv = styled.div`
   align-items: center;
   font-size: 1.2rem;
   font-weight: 700;
-  margin: 2% 0;
 `;
 const ModalListDiv = styled.div`
   display: flex;
@@ -127,14 +126,14 @@ const ModalListDiv = styled.div`
   width: 80%;
   justify-content: center;
   align-items: center;
-  margin-top: 2%;
+  margin-top: 1%;
 `;
 const ModalDivided = styled.div`
   display: flex;
   flex-direction: row;
   width: 100%;
   justify-content: center;
-  align-items: center;
+  align-items: baseline;
   margin-top: 2%;
 `
 const ModalListDividedDiv = styled.div`
@@ -151,13 +150,22 @@ const ModalList = styled.div`
   justify-content: center;
   align-items: center;
   width: 100%;
-  padding: 3% 5%;
+  padding: 2% 5%;
   z-index: 150;
   border-radius: 20px;
   &:hover {
     background-color: rgba(0, 0, 0, 0.127);
   }
 `;
+const NoChargerDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding: 3% 5%;
+  z-index: 150;
+`
 const LocationName = styled.div`
   width: 90%;
 `;
@@ -170,11 +178,11 @@ const UseableMark = styled.div`
 `;
 const { kakao } = window;
 
-export default function Center({ setInfo, serverData }) {
+export default function Center({ serverData }) {
   const originData = serverData
 
   const dispatch = useDispatch()
-  const filter = useSelector((state) => state);
+  const filter = useSelector((state) => state.filterReducer);
   const clickButton = (e) => {
     if (e.target.innerHTML === "전체") {
       dispatch({type: 'showAllType', payload:{ ...filter, type: "" }})
@@ -201,6 +209,10 @@ export default function Center({ setInfo, serverData }) {
   ]);
   const [curAddress, setCurAddress] = useState("제주특별자치도 제주시 용담2동");
   const [curChargerLocation, setCurChargerLocation] = useState();
+
+  const setInfo = (el) => {
+    dispatch({type: 'updateInfo', info: el})
+  }
 
   useEffect(() => {
     const container = document.getElementById("map");
@@ -350,6 +362,7 @@ export default function Center({ setInfo, serverData }) {
             </ModalCloseDiv>
             <ModalNameDiv>{curChargerLocation}</ModalNameDiv>
             {filteredData.length < 6 ? (
+              filteredData.length === 0 ? <NoChargerDiv>충전기 정보가 없습니다</NoChargerDiv> :
               <ModalListDiv>
                 {filteredData.map((el) => {
                   return (
@@ -361,7 +374,7 @@ export default function Center({ setInfo, serverData }) {
                 })}
               </ModalListDiv>
             ) : (
-              <ModalDivided>
+              <ModalDivided overTwenty={filteredData.length >= 18 ? true : false}>
                 <ModalListDividedDiv>
                   {filteredData.slice(0, parseInt(filteredData.length/2)).map((el) => {
                     return (

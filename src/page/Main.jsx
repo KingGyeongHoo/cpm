@@ -2,7 +2,7 @@ import { styled } from 'styled-components'
 import { useState, useEffect } from 'react'
 import Left from '../component/Left'
 import Center from '../component/Center'
-import Right from '../component/Right'
+import Right from '../component/Information'
 import Graph from '../component/Graph'
 import AWS from 'aws-sdk';
 
@@ -69,7 +69,6 @@ export default function Main(){
   }, []); // useEffect는 최초 렌더링 시에만 호출되도록 빈 배열을 전달
   const category = [...new Set(data.map(el => el.main_category))]
   const town = [...new Set(data.map(el => el.town))]
-  const [info, setInfo] = useState({})
   return (
     <>
       <TitleContainer>
@@ -77,11 +76,11 @@ export default function Main(){
       </TitleContainer>
       <MainContainer>
         <Left category={category} town={town} />
-        <Center setInfo={setInfo} serverData={data} />
-        <Right data={data} info={info} />
+        <Center serverData={data} />
+        {/* <Right /> */}
       </MainContainer>
       <GraphContainer>
-        <Graph info={info} />
+        <Graph />
       </GraphContainer>
     </>
   )

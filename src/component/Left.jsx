@@ -5,7 +5,7 @@ import { useDispatch, useSelector } from "react-redux";
 const LeftDiv = styled.div`
   display: flex;
   flex-direction: column;
-  width: 15%;
+  width: 20%;
   padding: 1%;
 `;
 const SearchDiv = styled.div`
@@ -33,7 +33,7 @@ const FilterDiv = styled.div`
   width: 100%;
   padding: 1% 0;
 `;
-const FilterCombobox = styled.select`
+export const FilterCombobox = styled.select`
   width: 100%;
   margin: 5% 0;
   padding: 5% 0;
@@ -43,7 +43,7 @@ const FilterCombobox = styled.select`
     outline: none;
   }
 `;
-const FilterComboOption = styled.option`
+export const FilterComboOption = styled.option`
   color: black;
   border: 1px solid #015aae;
   &:focus{
@@ -114,7 +114,6 @@ export default function Left({category, town}) {
   useEffect(() => {
     setWindowSize(window.innerWidth/100 + 5)
   }, [window.innerWidth])
-  console.log(window.innerWidth)
   return (
     <LeftDiv>
       <SearchDiv>
@@ -129,9 +128,6 @@ export default function Left({category, town}) {
         <FilterCombobox id='select_town' onChange={setDataByTown}>
           <FilterComboOption value="all">지역</FilterComboOption>
           {town.map(el => <FilterComboOption value={el} key={el}>{el}</FilterComboOption>)}
-        </FilterCombobox>
-        <FilterCombobox>
-          <FilterComboOption value="none">요일별</FilterComboOption>
         </FilterCombobox>
       </FilterDiv>
       <TimeDiv fontSize={windowSize}>{now}</TimeDiv>

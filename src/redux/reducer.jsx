@@ -22,3 +22,13 @@ export const filterReducer = (state = initialState, action) => {
       return initialState;
   }
 };
+
+const instate = {}
+export const infoReducer = (state=instate, action) =>{
+  switch(action.type){
+    case 'updateInfo':
+      return action.info
+    default:
+      return state
+  }
+}

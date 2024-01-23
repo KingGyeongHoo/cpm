@@ -1,4 +1,5 @@
 import { styled } from "styled-components";
+import { useSelector } from "react-redux";
 
 const RightDiv = styled.div`
   display: flex;
@@ -28,7 +29,8 @@ const InfoDetail = styled.div`
   width: 60%;
   font-size: 1.1rem;
 `
-export default function Right({info}){
+export default function Information(){
+  const info = useSelector(state => state.infoReducer)
   return(
     <RightDiv>
       <InfoDiv>

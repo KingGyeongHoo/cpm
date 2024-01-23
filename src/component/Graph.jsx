@@ -1,8 +1,21 @@
 import { useEffect, useState } from "react";
 import { styled } from "styled-components";
+import { useSelector } from "react-redux";
 import { BarChart, Bar, AreaChart, Area, ReferenceLine, XAxis, Tooltip, LabelList, ResponsiveContainer} from "recharts";
+import Information from './Information'
+import { FilterCombobox, FilterComboOption } from "./Left";
 import AWS from "aws-sdk";
 
+const InfoContainer = styled.div`
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+`
+const InfoDiv = styled.div`
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+`
 const GraphDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -15,10 +28,15 @@ const TitleDiv = styled.div`
     width: 100%;
     text-align: center;
 `
+const GraphComboBox = styled(FilterCombobox)`
+  width: 20%;
+  margin: 2% 0;
+  padding: 1% 0;
+`
 
-export default function Graph({ info }) {
+export default function Graph() {
   const [data, setData] = useState([]);
-
+  const info = useSelector(state => state.infoReducer)
   useEffect(() => {
     // AWS 설정
     AWS.config.update({
@@ -70,44 +88,49 @@ export default function Graph({ info }) {
       }
     }
   )
-  console.log(data)
 
   return (
-    <>
-      <GraphDiv>
-      <ResponsiveContainer width='100%' aspect={4.0/3.0}>
-          <TitleDiv>충전시간</TitleDiv>
-          <BarChart data={dataPerDay}>
-            <XAxis dataKey="day" />
-            <Tooltip />
-            <Bar dataKey="충전시간" fill="#f0cc20">
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </GraphDiv>
-      <GraphDiv>
+    <InfoContainer>
+      <GraphComboBox>
+        <FilterComboOption value="none">요일별</FilterComboOption>
+      </GraphComboBox>
+      <InfoDiv>
+        <Information></Information>
+        <GraphDiv>
         <ResponsiveContainer width='100%' aspect={4.0/3.0}>
-          <TitleDiv>일별 이용률</TitleDiv>
-          <AreaChart data={monthDay}>
-            <XAxis dataKey="day" />
-            <Tooltip />
-            <ReferenceLine x={50} stroke="red" label="Max PV PAGE" />
-            <Area type="monotone" dataKey="이용률" fill="#0a955b">
-            </Area>
-          </AreaChart>
-        </ResponsiveContainer>
-      </GraphDiv>
-      {/* <GraphDiv>
-        <ResponsiveContainer width='100%' aspect={4.0/3.0}>
-          <TitleDiv>사용량</TitleDiv>
-          <BarChart width={500} height={500} data={dataPerDay}>
-            <XAxis dataKey="day" />
-            <Tooltip />
-            <Bar dataKey="사용량" fill="#4a0a7b">
-            </Bar>
-          </BarChart>
-        </ResponsiveContainer>
-      </GraphDiv> */}
-    </>
+            <TitleDiv>충전시간</TitleDiv>
+            <BarChart data={dataPerDay}>
+              <XAxis dataKey="day" />
+              <Tooltip />
+              <Bar dataKey="충전시간" fill="#f0cc20">
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </GraphDiv>
+        <GraphDiv>
+          <ResponsiveContainer width='100%' aspect={4.0/3.0}>
+            <TitleDiv>일별 이용률</TitleDiv>
+            <AreaChart data={monthDay}>
+              <XAxis dataKey="day" />
+              <Tooltip />
+              <ReferenceLine x={50} stroke="red" label="Max PV PAGE" />
+              <Area type="monotone" dataKey="이용률" fill="#0a955b">
+              </Area>
+            </AreaChart>
+          </ResponsiveContainer>
+        </GraphDiv>
+        {/* <GraphDiv>
+          <ResponsiveContainer width='100%' aspect={4.0/3.0}>
+            <TitleDiv>사용량</TitleDiv>
+            <BarChart width={500} height={500} data={dataPerDay}>
+              <XAxis dataKey="day" />
+              <Tooltip />
+              <Bar dataKey="사용량" fill="#4a0a7b">
+              </Bar>
+            </BarChart>
+          </ResponsiveContainer>
+        </GraphDiv> */}
+      </InfoDiv>
+    </InfoContainer>
   );
 }

@@ -1,4 +1,9 @@
-import { legacy_createStore as createStore } from 'redux';
-import { filterReducer } from './reducer';
+import { combineReducers, legacy_createStore as createStore } from 'redux';
+import { filterReducer, infoReducer } from './reducer';
 
-export const store = createStore(filterReducer);
+const reducers = combineReducers({
+    filterReducer: filterReducer,
+    infoReducer: infoReducer
+})
+
+export const store = createStore(reducers);
