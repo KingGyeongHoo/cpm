@@ -193,7 +193,7 @@ export default function Center({ serverData }) {
     }
   };
   const [data, setData] = useState(originData);
-
+  console.log(filter)
   useEffect(() => {
     if (filter.category === "" && filter.town === "" && filter.type === '' && filter.keyword === '') {
       setData(originData);

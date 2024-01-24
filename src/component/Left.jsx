@@ -85,7 +85,7 @@ export default function Left({category, town}) {
     
   })
   const dispatch = useDispatch()
-  const filter = useSelector(state => state)
+  const filter = useSelector(state => state.filterReducer)
   let select_category = document.getElementById('select_category')
   const setDataByCategory = (e) => {
     const value = select_category.options[select_category.selectedIndex].value

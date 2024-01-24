@@ -4,7 +4,7 @@ import { useSelector } from "react-redux";
 const RightDiv = styled.div`
   display: flex;
   flex-direction: column;
-  width: 25%;
+  width: 90%;
   padding: 1%;
 `
 const InfoDiv = styled.div`
@@ -16,12 +16,12 @@ const Info = styled.li`
   display: flex;
   flex-direction: row;
   width: 100%;
-  margin: 5% 0;
-  padding: 3% 0;
+  margin: 3% 0;
+  padding: 1% 0;
   border-bottom: 2px solid #015aae;
 `
 const InfoText = styled.span`
-  width: 30%;
+  width: 20%;
   color: #176ab8;
   font-weight: bold;
 `
@@ -36,16 +36,16 @@ export default function Information(){
       <InfoDiv>
         <ul>
             <Info>
+              <InfoText>충전소명</InfoText>
+              <InfoDetail>{info.charger_name}</InfoDetail>
+            </Info>
+            <Info>
               <InfoText>충전기 ID</InfoText>
               <InfoDetail>{info.id}</InfoDetail>
             </Info>
             <Info>
               <InfoText>충전소 위치</InfoText>
               <InfoDetail>{info.charger_address}</InfoDetail>
-            </Info>
-            <Info>
-              <InfoText>충전소명</InfoText>
-              <InfoDetail>{info.charger_name}</InfoDetail>
             </Info>
             <Info>
               <InfoText>충전유형</InfoText>

@@ -2,8 +2,7 @@ import { styled } from 'styled-components'
 import { useState, useEffect } from 'react'
 import Left from '../component/Left'
 import Center from '../component/Center'
-import Right from '../component/Information'
-import Graph from '../component/Graph'
+import ChargerInfo from '../component/ChargerInfo'
 import AWS from 'aws-sdk';
 
 const MainContainer = styled.div`
@@ -31,13 +30,12 @@ const TitleDiv = styled.div`
   box-shadow: 10px 10px 1px #015aae;
   margin-bottom: 1%;
 `
-const GraphContainer = styled.div`
+const InformationContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: center;
-  width: 96%;
-  padding: 2%;
+  align-items: baseline;
+  width: 100%;
   border: 1px solid red;
 `
 export default function Main(){
@@ -79,9 +77,9 @@ export default function Main(){
         <Center serverData={data} />
         {/* <Right /> */}
       </MainContainer>
-      <GraphContainer>
-        <Graph />
-      </GraphContainer>
+      <InformationContainer>
+        <ChargerInfo />
+      </InformationContainer>
     </>
   )
 }

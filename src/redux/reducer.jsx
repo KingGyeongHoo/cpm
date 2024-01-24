@@ -1,6 +1,6 @@
 
-const initialState = { category: "", town: "", type: "", keyword: "" };
-export const filterReducer = (state = initialState, action) => {
+const filterState = { category: "", town: "", type: "", keyword: "" };
+export const filterReducer = (state = filterState, action) => {
   switch (action.type) {
     case "showAllType":
       return action.payload;
@@ -12,22 +12,38 @@ export const filterReducer = (state = initialState, action) => {
       return action.payload;
     case "AllCategory":
       return action.payload;
-      case "SelectTown":
-        return action.payload;
-      case "AllTown":
-        return action.payload;
-      case "Search":
+    case "SelectTown":
+      return action.payload;
+    case "AllTown":
+      return action.payload;
+    case "Search":
       return action.payload;
     default:
-      return initialState;
+      return state;
   }
 };
 
-const instate = {}
-export const infoReducer = (state=instate, action) =>{
-  switch(action.type){
+const infoState = {}
+export const infoReducer = (state = infoState, action) => {
+  switch (action.type) {
     case 'updateInfo':
       return action.info
+    default:
+      return state
+  }
+}
+
+const idxState = 0
+export const idxReducer = (state = idxState, action) => {
+  switch (action.type) {
+    case '0':
+      return 0
+    case '1':
+      return 1
+    case '2':
+      return 2
+    case '3':
+      return 3
     default:
       return state
   }
