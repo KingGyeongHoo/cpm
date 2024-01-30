@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { useSelector, dispatch } from "react-redux";
 import Information from './Information'
 import { FilterCombobox, FilterComboOption } from "./Left";
-import { BarChart, Bar, AreaChart, Area, ReferenceLine, XAxis, Tooltip, LabelList, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, AreaChart, Area, ReferenceLine, XAxis, YAxis, Tooltip, LabelList, ResponsiveContainer, CartesianGrid } from "recharts";
 
 const InfoContainer = styled.div`
   display: flex;
@@ -35,21 +35,26 @@ const TitleDiv = styled.div`
     text-align: center;
 `
 
-export default function TabInformation({data}) {
-    const [dayFilterdData, setDayFilterdData] = useState(data.filter(el => el.date === "월요일"))
-    let select_day = document.getElementById('select_day')
+export default function TabInformation({ data }) {
+    const idx = useSelector(state => state.idxReducer)
+    const [selectedDay, setSelectedDay] = useState("월요일")
+    const [dataPerTime, setDataPerTime] = useState([])
     const setDataByDay = (e) => {
-        const value = select_day.options[select_day.selectedIndex].value
-        setDayFilterdData(data.filter(el => el.date === value))
-      }
-    const dataPerTime = Array.from({ length: 24 }, (_, i) => i + 1).map(time =>{
-        return({
+        setSelectedDay(e.target.value)
+    }
+
+    useEffect(() => {
+        const dayFilterdData = data.filter(el => el.date === selectedDay)
+        setDataPerTime(Array.from({ length: 24 }, (_, i) => i + 1).map(time => {
+            return ({
                 time: time.toString() + "시",
                 충전대수: dayFilterdData.filter(el => parseInt(el.start_time.slice(0, 3)) === time).length
-                
+
             }
-        )
-    })
+            )
+        }))
+    }, [selectedDay, data, idx])
+
     const dataPerDay = ["월요일", "화요일", "수요일", "목요일", "금요일"].map(
         (day) => {
             return {
@@ -74,8 +79,7 @@ export default function TabInformation({data}) {
             }
         }
     )
-    console.log(dayFilterdData)
-    const idx = useSelector(state => state.idxReducer)
+    console.log(dataPerDay.day)
     switch (idx) {
         case 0:
             return (
@@ -86,31 +90,51 @@ export default function TabInformation({data}) {
         case 1:
             return (
                 <InfoContainer>
-                    <GraphComboBox  id='select_day' onChange={setDataByDay}>
+                    <GraphComboBox id='select_day' onChange={setDataByDay}>
                         {["월요일", "화요일", "수요일", "목요일", "금요일"].map(el => {
-                            return(
+                            return (
                                 <FilterComboOption value={el} key={el}>{el}</FilterComboOption>
                             )
                         })}
-                        
+
                     </GraphComboBox>
                     <InfoDiv>
                         <GraphDiv>
                             <ResponsiveContainer width='100%' aspect={4.0 / 3.0}>
-                                <TitleDiv>충전시간</TitleDiv>
+                                <TitleDiv>
+                                    <h2>충전기 총 이용 시간(단위 : 분)</h2>
+                                </TitleDiv>
                                 <BarChart data={dataPerDay}>
+                                    <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="day" />
-                                    <Tooltip />
-                                    <Bar dataKey="충전시간" fill="#f0cc20">
+                                    <YAxis />
+                                    <Bar
+                                        dataKey="충전시간"
+                                        fill="#f0cc20"
+                                        shape={(props) => (
+                                            <rect
+                                                {...props}
+                                                fill={props.payload.day === selectedDay ? "#b157bd" : "#f0cc20"}
+                                            />
+                                        )}
+                                    >
+                                        <LabelList
+                                         position="top"
+                                         fill="#000000"
+                                        ></LabelList>
                                     </Bar>
                                 </BarChart>
                             </ResponsiveContainer>
                         </GraphDiv>
                         <GraphDiv>
                             <ResponsiveContainer width='100%' aspect={4.0 / 3.0}>
-                                <TitleDiv>일별 이용률</TitleDiv>
+                                <TitleDiv>
+                                    <h2>{selectedDay} 시간별 이용 대수</h2>
+                                </TitleDiv>
                                 <AreaChart data={dataPerTime}>
+                                    <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="time" />
+                                    <YAxis />
                                     <Tooltip />
                                     <ReferenceLine x={50} stroke="red" label="Max PV PAGE" />
                                     <Area type="monotone" dataKey="충전대수" fill="#0a955b">

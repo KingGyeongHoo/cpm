@@ -88,7 +88,7 @@ export default function Left({category, town}) {
   const filter = useSelector(state => state.filterReducer)
   let select_category = document.getElementById('select_category')
   const setDataByCategory = (e) => {
-    const value = select_category.options[select_category.selectedIndex].value
+    const value = e.target.value
     if(value !== 'all'){
       dispatch({type:'SelectCategory', payload:{...filter, category: value}})
     } else {
@@ -97,7 +97,7 @@ export default function Left({category, town}) {
   }
   let select_town = document.getElementById('select_town')
   const setDataByTown = (e) => {
-    const value = select_town.options[select_town.selectedIndex].value
+    const value = e.target.value
     if(value !== 'all'){
       dispatch({type:'SelectTown', payload:{...filter, town: value}})
     } else {
