@@ -3,7 +3,7 @@ import { styled } from "styled-components";
 import { useSelector, dispatch } from "react-redux";
 import Information from './Information'
 import { FilterCombobox, FilterComboOption } from "./Left";
-import { BarChart, Bar, AreaChart, Area, ReferenceLine, XAxis, YAxis, Tooltip, LabelList, ResponsiveContainer, CartesianGrid } from "recharts";
+import { BarChart, Line, Bar, AreaChart, Area, ReferenceLine, XAxis, YAxis, Tooltip, LabelList, ResponsiveContainer, CartesianGrid, ComposedChart } from "recharts";
 
 const InfoContainer = styled.div`
   display: flex;
@@ -63,7 +63,8 @@ export default function TabInformation({ data }) {
                     data
                         .filter((el) => el.date === day)
                         .reduce((acc, cur) => acc + cur.minute, 0)
-                )
+                ),
+                충전대수: data.filter((el) => el.date === day).length
             }
         }
     );
@@ -104,13 +105,15 @@ export default function TabInformation({ data }) {
                                 <TitleDiv>
                                     <h2>충전기 총 이용 시간(단위 : 분)</h2>
                                 </TitleDiv>
-                                <BarChart data={dataPerDay}>
+                                <ComposedChart data={dataPerDay}>
                                     <CartesianGrid strokeDasharray="3 3" />
                                     <XAxis dataKey="day" />
-                                    <YAxis />
+                                    <YAxis yAxisId="left" orientation="left" stroke="#8884d8" />
+                                    <YAxis yAxisId="right" orientation="right" stroke="#82ca9d" />
                                     <Bar
+                                        yAxisId="left"
                                         dataKey="충전시간"
-                                        fill="#f0cc20"
+                                        fill="#b3b3b3"
                                         shape={(props) => (
                                             <rect
                                                 {...props}
@@ -118,12 +121,10 @@ export default function TabInformation({ data }) {
                                             />
                                         )}
                                     >
-                                        <LabelList
-                                         position="top"
-                                         fill="#000000"
-                                        ></LabelList>
                                     </Bar>
-                                </BarChart>
+                                    <Tooltip></Tooltip>
+                                    <Line yAxisId="right" dataKey="충전대수" stroke="#ff7300" />
+                                </ComposedChart>
                             </ResponsiveContainer>
                         </GraphDiv>
                         <GraphDiv>
