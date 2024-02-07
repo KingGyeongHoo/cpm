@@ -78,7 +78,7 @@ export default function Main(){
         {/* <Right /> */}
       </MainContainer>
       <InformationContainer>
-        <ChargerInfo />
+        <ChargerInfo chargerIdArray={data.map(el => el.id.toString())} />
       </InformationContainer>
     </>
   )

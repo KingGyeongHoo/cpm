@@ -7,6 +7,8 @@ import {
   Legend,
   Line,
   Bar,
+  ScatterChart, 
+  Scatter,
   AreaChart,
   Area,
   ReferenceLine,
@@ -61,12 +63,13 @@ const DescH5 = styled.h5`
     color: ${props => props.color};
     text-align: right;
 `
-export default function TabInformation({ data }) {
+export default function TabInformation({ data, allInfo }) {
   const idx = useSelector((state) => state.idxReducer);
   const chargerName = useSelector((state) => state.infoReducer.charger_name);
+  const chargerId = useSelector((state) => state.infoReducer.id)
   const [selectedDate, setSelectedDate] = useState("월요일");
   const [selectedMonth, setSelectedMonth] = useState(1);
-//   const [dataPerTime, setDataPerTime] = useState([]);
+  //   const [dataPerTime, setDataPerTime] = useState([]);
   const setDataByDate = (e) => {
     setSelectedDate(e.target.value);
   };
@@ -74,72 +77,77 @@ export default function TabInformation({ data }) {
     setSelectedMonth(e.target.value);
   };
 
-    const dayFilterdData = data.filter((el) => el.date === selectedDate);
-    const dataPerTime = 
-      Array.from({ length: 24 }, (_, i) => i + 1).map((time) => {
-        return {
-          time: time.toString() + "시",
-          이용대수: dayFilterdData.filter(
-            (el) => parseInt(el.start_time.slice(0, 3)) === time
-          ).length,
-        };
-      })
+  const dayFilterdData = data.filter((el) => el.date === selectedDate);
+  const dataPerTime =
+    Array.from({ length: 24 }, (_, i) => i + 1).map((time) => {
+      return {
+        time: time.toString() + "시",
+        이용대수: dayFilterdData.filter(
+          (el) => parseInt(el.start_time.slice(0, 3)) === time
+        ).length,
+      };
+    })
 
   const dataPerDay = ["월요일", "화요일", "수요일", "목요일", "금요일"].map(
     (day) => {
-        const dayData = data.filter((el) => el.date === day)
+      const dayData = data.filter((el) => el.date === day)
       return {
         day: day,
         충전시간: Math.round(
-            dayData.reduce((acc, cur) => acc + cur.minute, 0)
+          dayData.reduce((acc, cur) => acc + cur.minute, 0)
         ),
         이용대수: data.filter((el) => el.date === day).length,
         이용률:
-        dayData.length > 0
-              ? Math.round(
-                  (dayData.reduce((acc, cur) => acc + cur.minute, 0) /
-                      (dayData.length * 1440)) *
-                  100
-              )
-              : 0,
+          dayData.length > 0
+            ? Math.round(
+              (dayData.reduce((acc, cur) => acc + cur.minute, 0) /
+                (dayData.length * 1440)) *
+              100
+            )
+            : 0,
       };
     }
   );
   const daytaPerMonth = Array.from({ length: 12 }, (_, i) => i + 1).map(month => {
-    const monthData = data.filter((el) => (new Date(el.start_date).getMonth()+1)/1 === month)
-    return{
-        month: month+"월",
-        충전시간: Math.round(
-            monthData.reduce((acc, cur) => acc + cur.minute, 0)
-          ),
-          이용률:
-          monthData.length > 0
-              ? Math.round(
-                  (monthData.reduce((acc, cur) => acc + cur.minute, 0) /
-                      (monthData.length * 1440)) *
-                  100
-              )
-              : 0,
+    const monthData = data.filter((el) => (new Date(el.start_date).getMonth() + 1) / 1 === month)
+    return {
+      month: month + "월",
+      충전시간: Math.round(
+        monthData.reduce((acc, cur) => acc + cur.minute, 0)
+      ),
+      이용률:
+        monthData.length > 0
+          ? Math.round(
+            (monthData.reduce((acc, cur) => acc + cur.minute, 0) /
+              (monthData.length * 1440)) *
+            100
+          )
+          : 0,
     }
   })
 
-    const monthDay = Array.from({ length: 31 }, (_, i) => i + 1).map((day) => {
-        const monthData = data.filter(el => (new Date(el.start_date).getMonth() + 1)/1 === selectedMonth / 1)
-        return {
-            day: day.toString() + "일",
-            이용대수: monthData.filter(el => (new Date(el.start_date).getDate())/1 === day).length,
-            이용시간: Math.round(
-                (monthData.reduce((acc, cur) => acc + cur.minute, 0))),
-            이용률:
-                monthData.length > 0
-                    ? Math.round(
-                        (monthData.reduce((acc, cur) => acc + cur.minute, 0) /
-                            (monthData.length * 1440)) *
-                        100
-                    )
-                    : 0,
-        };
-    });
+  const monthDay = Array.from({ length: 31 }, (_, i) => i + 1).map((day) => {
+    const monthData = data.filter(el => (new Date(el.start_date).getMonth() + 1) / 1 === selectedMonth / 1)
+    return {
+      day: day.toString() + "일",
+      이용대수: monthData.filter(el => (new Date(el.start_date).getDate()) / 1 === day).length,
+      이용시간: Math.round(
+        (monthData.reduce((acc, cur) => acc + cur.minute, 0))),
+      이용률:
+        monthData.length > 0
+          ? Math.round(
+            (monthData.reduce((acc, cur) => acc + cur.minute, 0) /
+              (monthData.length * 1440)) *
+            100
+          )
+          : 0,
+    };
+  });
+  console.log(allInfo)
+  // const cost_rank = allInfo.charger_sorted.sort((a,b) => b.cost - a.cost)
+  // .findIndex(el => el.id === chargerId)
+  // const usage_rank = allInfo.charger_sorted.sort((a,b) => b.usage - a.usage)
+  // .findIndex(el => el.id === chargerId)
   const CustomTooltip = ({ active, payload, label }) => {
     if (active) {
       // payload는 데이터 포인트에 대한 정보를 가지고 있습니다.
@@ -197,9 +205,18 @@ export default function TabInformation({ data }) {
     );
   };
   const CustomMonthBar = ({ x, y, width, height, selectedMonth, payload }) => {
-    const backgroundColor = selectedMonth+"월" === payload.month ? "#aba6f6" : "#eaeaea";
+    const backgroundColor = selectedMonth + "월" === payload.month ? "#aba6f6" : "#eaeaea";
     return (
       <rect x={x} y={y} width={width} height={height} fill={backgroundColor} />
+    );
+  };
+  const CustomScatter = ({ cx, cy, payload }) => {
+    let color = '#8884d8'; // Default color
+    if (payload.id === 'chargerId') {
+      color = 'red'; // Set red color if id is 'chargerId'
+    }
+    return (
+      <circle cx={cx} cy={cy} r={6} fill={color} />
     );
   };
 
@@ -289,16 +306,16 @@ export default function TabInformation({ data }) {
       );
     case 2:
       return (
-          <InfoContainer>
-              <GraphComboBox id="select_day" onChange={setDataByMonth}>
-                  {[1,2,3,4,5,6,7,8,9,10,11,12].map((el) => {
-                      return (
-                          <FilterComboOption value={el} key={el}>
-                              {el}월
-                          </FilterComboOption>
-                      );
-                  })}
-              </GraphComboBox>
+        <InfoContainer>
+          <GraphComboBox id="select_day" onChange={setDataByMonth}>
+            {[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12].map((el) => {
+              return (
+                <FilterComboOption value={el} key={el}>
+                  {el}월
+                </FilterComboOption>
+              );
+            })}
+          </GraphComboBox>
           <InfoDiv>
             <GraphDiv>
               <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
@@ -359,6 +376,127 @@ export default function TabInformation({ data }) {
           </InfoDiv>
         </InfoContainer>
       );
+    case 3:
+      return (
+        <InfoContainer>
+          <InfoDiv>
+            <GraphDiv>
+              <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
+                <TitleDiv>
+                  <h2>{chargerName} 월별 이용률</h2>
+                  <DescH5 color="#ffffff">black</DescH5>
+                </TitleDiv>
+                <ComposedChart data={daytaPerMonth}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis
+                    yAxisId="left"
+                    orientation="left"
+                    stroke="#8884d8"
+                    tickFormatter={(value) => value.toLocaleString() + "분"}
+                  />
+                  <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    stroke="#82ca9d"
+                    tickFormatter={(value) => value.toLocaleString() + "%"}
+                  />
+                  <Legend />
+                  <Bar yAxisId="left" dataKey="충전시간" fill="#8884d8" shape={<CustomMonthBar selectedMonth={selectedMonth}></CustomMonthBar>}></Bar>
+                  <Tooltip content={<CustomMonthlyTooltip />}></Tooltip>
+                  <Line
+                    yAxisId="right"
+                    dataKey="이용률"
+                    stroke="#82ca9d"
+                    strokeWidth={3}
+                    activeDot={{ r: 7 }}
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </GraphDiv>
+            <GraphDiv>
+              <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
+                <TitleDiv>
+                  <h2>{selectedMonth}월 일별 이용 대수</h2>
+                  <DescH5>Total : {monthDay.reduce((acc, cur) => acc + cur.이용대수, 0)}대</DescH5>
+                </TitleDiv>
+                <AreaChart data={monthDay}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="day" />
+                  <YAxis
+                    tickFormatter={(value) => Number.isInteger(value) ? value.toLocaleString() + "대" : ''}
+                  />
+                  <Tooltip content={<CustomUsageTooltip />} />
+                  <ReferenceLine x={50} stroke="red" label="Max PV PAGE" />
+                  <Area
+                    type="monotone"
+                    dataKey="이용대수"
+                    fill="#0a955b"
+                  ></Area>
+                </AreaChart>
+              </ResponsiveContainer>
+            </GraphDiv>
+          </InfoDiv>
+          <InfoDiv>
+            <GraphDiv>
+              <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
+                <TitleDiv>
+                  <h2>{chargerName} 월별 이용률</h2>
+                  <DescH5 color="#ffffff">black</DescH5>
+                </TitleDiv>
+                <ComposedChart data={daytaPerMonth}>
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="month" />
+                  <YAxis
+                    yAxisId="left"
+                    orientation="left"
+                    stroke="#8884d8"
+                    tickFormatter={(value) => value.toLocaleString() + "분"}
+                  />
+                  <YAxis
+                    yAxisId="right"
+                    orientation="right"
+                    stroke="#82ca9d"
+                    tickFormatter={(value) => value.toLocaleString() + "%"}
+                  />
+                  <Legend />
+                  <Bar yAxisId="left" dataKey="충전시간" fill="#8884d8" shape={<CustomMonthBar selectedMonth={selectedMonth}></CustomMonthBar>}></Bar>
+                  <Tooltip content={<CustomMonthlyTooltip />}></Tooltip>
+                  <Line
+                    yAxisId="right"
+                    dataKey="이용률"
+                    stroke="#82ca9d"
+                    strokeWidth={3}
+                    activeDot={{ r: 7 }}
+                  />
+                </ComposedChart>
+              </ResponsiveContainer>
+            </GraphDiv>
+            <GraphDiv>
+              <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
+                <TitleDiv>
+                  <h2>{selectedMonth}월 일별 이용 대수</h2>
+                  <DescH5>Total : {monthDay.reduce((acc, cur) => acc + cur.이용대수, 0)}대</DescH5>
+                </TitleDiv>
+                <ScatterChart
+                  margin={{
+                    top: 20,
+                    right: 20,
+                    bottom: 20,
+                    left: 20,
+                  }}
+                >
+                  <CartesianGrid />
+                  <XAxis type="number" dataKey="cost" name="cost" unit="won" />
+                  <YAxis type="number" dataKey="usage" name="usage" unit="kw" />
+                  <Tooltip cursor={{ strokeDasharray: '3 3' }} />
+                  <Scatter name="A school" data={allInfo.charger_sorted} fill="#8884d8" shape={<CustomScatter />}/>
+                </ScatterChart>
+              </ResponsiveContainer>
+            </GraphDiv>
+          </InfoDiv>
+        </InfoContainer>
+      )
     default:
       <></>;
   }

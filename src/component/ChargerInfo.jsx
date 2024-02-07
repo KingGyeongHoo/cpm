@@ -27,8 +27,11 @@ const GraphComboBox = styled(FilterCombobox)`
   padding: 1% 0;
 `
 
-export default function ChargerInfo() {
+export default function ChargerInfo({chargerIdArray}) {
+  const [allData, setAlldata] = useState([])
   const [data, setData] = useState([]);
+  const [allInfo, setAllInfo] = useState({})
+
   const info = useSelector(state => state.infoReducer)
   useEffect(() => {
     // AWS 설정
@@ -49,21 +52,38 @@ export default function ChargerInfo() {
         console.error("Error fetching data from S3:", err);
       } else {
         const fileContent = result.Body.toString("utf-8");
-        const filteredData = JSON.parse(fileContent).filter(
-          (el) => parseInt(el.id) === info.id
-        );
-        setData(filteredData);
+        const data = JSON.parse(fileContent)
+        setAlldata(data)
+        const allInfo = {
+          charger_sorted: chargerIdArray.map(id => {
+            const filtered = data.filter(el => el.id === id)
+            return {
+              id: id,
+              cost: filtered.length > 0 ? 
+              Math.round(filtered.reduce((acc, cur) => acc +cur.cost, 0) / filtered.length) : 0,
+              usage: filtered.length > 0 ? 
+              Math.round(filtered.reduce((acc, cur) => acc + cur.useage, 0) / filtered.length) : 0
+            }
+          }),
+          average_cost: Math.round(data.reduce((acc, cur) => acc + cur.cost/1, 0) / data.length),
+          average_usage: Math.round(data.reduce((acc, cur) => acc + cur.useage/1, 0) / data.length)
+        }
+        setAllInfo(allInfo)
       }
     });
-  }, [info]);
+  }, []);
 
+  console.log(allInfo)
   const dispatch = useDispatch()
+  useEffect(() => {
+    setData(allData.filter((el) => parseInt(el.id) === info.id))
+  }, [info])
   return (
     <>
       <TabContainer>
         {["충전기 정보", "요일별 사용률", "일별 사용률", "통계"].map((el, idx) => <TabList onClick={() => dispatch({type: idx.toString()})}>{el}</TabList>)}
       </TabContainer>
-      <TabInformation data={data}></TabInformation>
+      <TabInformation data={data} allInfo={allInfo}></TabInformation>
     </>
   );
 }
