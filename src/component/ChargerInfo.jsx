@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { styled } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
 import { FilterCombobox } from "./Left";
@@ -28,11 +28,12 @@ const GraphComboBox = styled(FilterCombobox)`
 `
 
 export default function ChargerInfo({chargerIdArray}) {
-  const [allData, setAlldata] = useState([])
+  const dispatch = useDispatch()
   const [data, setData] = useState([]);
-  const [allInfo, setAllInfo] = useState({})
-
+  const [allData, setAllData] = useState([])
   const info = useSelector(state => state.infoReducer)
+  const figure = useSelector(state => state.figureReducer)
+  
   useEffect(() => {
     // AWS 설정
     AWS.config.update({
@@ -45,7 +46,7 @@ export default function ChargerInfo({chargerIdArray}) {
     const s3 = new AWS.S3();
 
     // S3에서 파일 읽기
-    const params = { Bucket: "chargers-list/useage-record", Key: "usageData.json" };
+    const params = { Bucket: "chargers-list/useage-record", Key: "ChargerUseData.json" };
 
     s3.getObject(params, (err, result) => {
       if (err) {
@@ -53,28 +54,29 @@ export default function ChargerInfo({chargerIdArray}) {
       } else {
         const fileContent = result.Body.toString("utf-8");
         const data = JSON.parse(fileContent)
-        setAlldata(data)
+        setAllData(data)
         const allInfo = {
-          charger_sorted: chargerIdArray.map(id => {
-            const filtered = data.filter(el => el.id === id)
-            return {
-              id: id,
-              cost: filtered.length > 0 ? 
-              Math.round(filtered.reduce((acc, cur) => acc +cur.cost, 0) / filtered.length) : 0,
-              usage: filtered.length > 0 ? 
-              Math.round(filtered.reduce((acc, cur) => acc + cur.useage, 0) / filtered.length) : 0
-            }
-          }),
           average_cost: Math.round(data.reduce((acc, cur) => acc + cur.cost/1, 0) / data.length),
           average_usage: Math.round(data.reduce((acc, cur) => acc + cur.useage/1, 0) / data.length)
         }
-        setAllInfo(allInfo)
+        dispatch({type:'SETINFO', figure:allInfo})
       }
     });
   }, []);
 
-  console.log(allInfo)
-  const dispatch = useDispatch()
+  const charger_sorted = useMemo(() => {
+    return chargerIdArray.map(id => {
+      const filtered = allData.filter(el => el.id.toString() === id.toString())
+      return {
+        id: id,
+        cost: filtered.length > 0 ? 
+        Math.round(filtered.reduce((acc, cur) => acc +cur.cost, 0) / filtered.length) : 0,
+        usage: filtered.length > 0 ? 
+        Math.round(filtered.reduce((acc, cur) => acc + cur.useage, 0) / filtered.length) : 0
+      }
+    })
+  }, [allData, chargerIdArray])
+
   useEffect(() => {
     setData(allData.filter((el) => parseInt(el.id) === info.id))
   }, [info])
@@ -83,7 +85,7 @@ export default function ChargerInfo({chargerIdArray}) {
       <TabContainer>
         {["충전기 정보", "요일별 사용률", "일별 사용률", "통계"].map((el, idx) => <TabList onClick={() => dispatch({type: idx.toString()})}>{el}</TabList>)}
       </TabContainer>
-      <TabInformation data={data} allInfo={allInfo}></TabInformation>
+      <TabInformation data={data} charger_sorted={charger_sorted}></TabInformation>
     </>
   );
 }

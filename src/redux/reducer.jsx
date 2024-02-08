@@ -48,3 +48,13 @@ export const idxReducer = (state = idxState, action) => {
       return state
   }
 }
+
+const figureState = {}
+export const figureReducer = (state = figureState, action) => {
+  switch(action.type){
+    case 'SETINFO':
+      return action.figure
+    default:
+      return state
+  }
+}
