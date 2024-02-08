@@ -243,7 +243,7 @@ export default function Center({ serverData }) {
                   ${el.location}
                 </span>
                 <div>
-                  사용 가능 대수 : ${
+                  이용 가능 대수 : ${
                     data.filter((item) => item.location === el.location).length
                   }
                 </div>

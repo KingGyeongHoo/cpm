@@ -149,12 +149,12 @@ export default function TabInformation({ data, charger_sorted }) {
   });
   const cost_rank = charger_sorted.sort((a, b) => b.cost - a.cost).findIndex(el => el.id === chargerId) + 1
   const usage_rank = charger_sorted.sort((a, b) => b.usage - a.usage).findIndex(el => el.id === chargerId) + 1
-
+  console.log(charger_sorted[0])
   const avg_cost = Math.round(data.reduce((acc, cur) => acc + cur.cost/1, 0) / data.length)
   const avg_usage = Math.round(data.reduce((acc, cur) => acc + cur.useage/1, 0) / data.length)
   const average = [
     { name: "가격", 전체평균: figure.average_cost, 현재평균: data.length < 1 ? 0 : avg_cost},
-    { name: "사용량", 전체평균: figure.average_usage, 현재평균: data.length < 1 ? 0 : avg_usage}
+    { name: "이용량", 전체평균: figure.average_usage, 현재평균: data.length < 1 ? 0 : avg_usage}
   ]
   const CustomTooltip = ({ active, payload, label }) => {
     if (active) {
@@ -215,7 +215,7 @@ export default function TabInformation({ data, charger_sorted }) {
         <CustomTooltipDiv>
           <CustumTooltipP>{payload[0].payload.id}</CustumTooltipP>
           <CustumTooltipP color="#63b382">{`비용: ${cost.toLocaleString()}원`}</CustumTooltipP>
-          <CustumTooltipP color="#63b382">{`사용량: ${usage.toLocaleString()}kw`}</CustumTooltipP>
+          <CustumTooltipP color="#63b382">{`이용량: ${usage.toLocaleString()}kw`}</CustumTooltipP>
         </CustomTooltipDiv>
       );
     }
@@ -251,6 +251,8 @@ export default function TabInformation({ data, charger_sorted }) {
 
     return slicedPart.concat(rest);
   }
+  const sortedDate = data.map(el => el).sort((a,b) => new Date(a.start_date) - new Date(b.start_date))
+  console.log(sortedDate)
   const scatterArr = reArrange(charger_sorted)
   switch (idx) {
     case 0:
@@ -422,7 +424,7 @@ export default function TabInformation({ data, charger_sorted }) {
             <GraphDiv>
               <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
                 <TitleDiv>
-                  <h2>{selectedMonth}월 일별 이용 대수</h2>
+                  <h2>평균 이용량 비교</h2>
                   <DescH5>Total : {monthDay.reduce((acc, cur) => acc + cur.이용대수, 0)}대</DescH5>
                 </TitleDiv>
                 <BarChart
@@ -449,10 +451,58 @@ export default function TabInformation({ data, charger_sorted }) {
           </InfoDiv>
           <InfoDiv>
             <GraphDiv>
+              <TitleDiv>
+                <h2>연간 가격/이용량 변동</h2>
+                <DescH5>Total : {dataPerTime.reduce((acc, cur) => acc + cur.이용대수, 0)}대</DescH5>
+              </TitleDiv>
+              <ResponsiveContainer width="100%" height={200}>
+                <AreaChart
+                  width={500}
+                  height={200}
+                  data={sortedDate}
+                  syncId="anyId"
+                  margin={{
+                    top: 10,
+                    right: 30,
+                    left: 0,
+                    bottom: 0,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="start_date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Area type="monotone" dataKey="cost" stroke="#8884d8" fill="#8884d8" />
+                </AreaChart>
+              </ResponsiveContainer>
+              <p>Maybe some other content</p>
+
+              <ResponsiveContainer width="100%" height={200}>
+                <AreaChart
+                  width={500}
+                  height={200}
+                  data={data}
+                  syncId="anyId"
+                  margin={{
+                    top: 10,
+                    right: 30,
+                    left: 0,
+                    bottom: 0,
+                  }}
+                >
+                  <CartesianGrid strokeDasharray="3 3" />
+                  <XAxis dataKey="start_date" />
+                  <YAxis />
+                  <Tooltip />
+                  <Area type="monotone" dataKey="useage" stroke="#82ca9d" fill="#82ca9d" />
+                </AreaChart>
+              </ResponsiveContainer>
+            </GraphDiv>
+            <GraphDiv>
+              <TitleDiv>
+                <h2>분산</h2>
+              </TitleDiv>
               <ResponsiveContainer width="100%" aspect={4.0 / 3.0}>
-                <TitleDiv>
-                  <h2>{selectedMonth}월 일별 이용 대수</h2>
-                </TitleDiv>
                 <Scatter figure={figure} ></Scatter>
                 <ScatterChart
                   margin={{
