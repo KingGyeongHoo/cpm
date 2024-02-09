@@ -2,7 +2,7 @@ import React, { useEffect, useState, useMemo } from "react";
 import { styled } from "styled-components";
 import { useSelector, dispatch } from "react-redux";
 import Information from "./Information";
-import { FilterCombobox, FilterComboOption } from "./Left";
+import { FilterCombobox, FilterComboOption } from "./Left/Left";
 import {
   Legend,
   Line,
@@ -72,7 +72,6 @@ export default function TabInformation({ data, charger_sorted }) {
   const figure = useSelector(state => state.figureReducer)
   const [selectedDate, setSelectedDate] = useState("월요일");
   const [selectedMonth, setSelectedMonth] = useState(1);
-  //   const [dataPerTime, setDataPerTime] = useState([]);
 
   const setDataByDate = (e) => {
     setSelectedDate(e.target.value);

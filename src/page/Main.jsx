@@ -1,9 +1,11 @@
 import { styled } from 'styled-components'
-import { useState, useEffect } from 'react'
-import Left from '../component/Left'
-import Center from '../component/Center'
-import ChargerInfo from '../component/ChargerInfo'
+import { useState, useEffect, useMemo } from 'react'
+import Left from '../PageComponents/Left/Left'
+import Center from '../PageComponents/Map/Center'
+import ChargerInfo from '../PageComponents/ChargerInfo'
 import AWS from 'aws-sdk';
+
+import Pallete from '../Pallete'
 
 const MainContainer = styled.div`
   display: flex;
@@ -11,7 +13,8 @@ const MainContainer = styled.div`
   justify-content: center;
   align-items: center;
   width: 96%;
-  padding: 2%;
+  padding: 0% 2%;
+  background-color: ${Pallete.main_font_white};
 `
 const TitleContainer = styled.div`
   display: flex;
@@ -65,8 +68,8 @@ export default function Main(){
       }
     });
   }, []); // useEffect는 최초 렌더링 시에만 호출되도록 빈 배열을 전달
-  const category = [...new Set(data.map(el => el.main_category))]
-  const town = [...new Set(data.map(el => el.town))]
+  const category = useMemo(() => [...new Set(data.map(el => el.main_category))], [data])
+  const town = useMemo(() => [...new Set(data.map(el => el.town))], [data])
   return (
     <>
       <TitleContainer>

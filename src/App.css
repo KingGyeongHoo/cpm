@@ -1,3 +1,14 @@
+@font-face {
+  font-family: 'DOSIyagiMedium';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2304-2@1.0/DOSIyagiMedium.woff2') format('woff2');
+  font-weight: normal;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'TheJamsil5Bold';
+  src: url('https://cdn.jsdelivr.net/gh/projectnoonnu/noonfonts_2302_01@1.0/TheJamsil5Bold.woff2') format('woff2');
+  font-style: normal;
+}
 .infowindow {
   display: flex;
   flex-direction: column;
@@ -5,16 +16,24 @@
   align-items: center;
   color: black;
   line-height: 22px;
-  border-radius: 4px;
+  border-radius: 10px;
   padding: 0px;
   width: 300px;
   height: 100px;
 }
-.location{
+
+.location {
   font-size: 1.0rem;
-  font-weight: bold;
+  margin: 2% 0;
 }
-.lists{
+.available{
+  font-size: 1.2rem;
+  font-weight: bold;
+  margin: 2% 0;
+  color: #96C7C1
+}
+
+.lists {
   display: flex;
   width: 100%;
   justify-content: flex-start;

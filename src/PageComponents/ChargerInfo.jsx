@@ -1,7 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { styled } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { FilterCombobox } from "./Left";
+import { FilterCombobox } from "./Left/Left";
 import TabInformation from "./TabInformation";
 import AWS from "aws-sdk";
 

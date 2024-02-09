@@ -58,3 +58,13 @@ export const figureReducer = (state = figureState, action) => {
       return state
   }
 }
+
+const addressState = '제주특별자치도 제주시 용담2동'
+export const addressReducer = (state = addressState, action) => {
+  switch(action.type){
+    case 'SETADDRESS':
+      return action.address
+    default:
+      return state
+  }
+}
