@@ -14,7 +14,7 @@ const reducers = combineReducers({
     infoReducer: infoReducer,
     idxReducer: idxReducer,
     figureReducer: figureReducer,
-    addressReducer:addressReducer
+    addressReducer:addressReducer,
 })
 const persistedReducer = persistReducer(persistConfig, reducers);
 export const store = createStore(persistedReducer);

@@ -2,7 +2,7 @@ import { styled } from 'styled-components'
 import { useState, useEffect, useMemo } from 'react'
 import Left from '../PageComponents/Left/Left'
 import Center from '../PageComponents/Map/Center'
-import ChargerInfo from '../PageComponents/ChargerInfo'
+import ChargerInfo from '../PageComponents/ChargerInfo/ChargerInfo'
 import AWS from 'aws-sdk';
 
 import Pallete from '../Pallete'
@@ -15,6 +15,7 @@ const MainContainer = styled.div`
   width: 96%;
   padding: 0% 2%;
   background-color: ${Pallete.main_font_white};
+  border-bottom: 10px solid ${Pallete.main_color_light};
 `
 const TitleContainer = styled.div`
   display: flex;
@@ -37,9 +38,9 @@ const InformationContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: center;
-  align-items: baseline;
+  align-items: flex-start;
   width: 100%;
-  border: 1px solid red;
+  background-color: ${Pallete.side_color_light};
 `
 export default function Main(){
   const [data, setData] = useState([]);

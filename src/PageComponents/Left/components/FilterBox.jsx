@@ -84,7 +84,7 @@ const FilterComboOptionList = styled.li`
   }
 `
 
-const FilterBox = ({data, settingInfo, filter}) => {
+const FilterBox = ({data, settingInfo, filter, click}) => {
     const dispatch = useDispatch()
 
     const [open, setOpen] = useState(false)
@@ -93,16 +93,21 @@ const FilterBox = ({data, settingInfo, filter}) => {
     const clickEvent = (e) => {
       const value = e.target.textContent
       setText(value)
-      if (value !== '전체') {
-        dispatch({ type: settingInfo.selectSomething, payload: { ...filter, [settingInfo.changeValue]: value } })
+      if (settingInfo) {
+        if (value !== '전체') {
+          dispatch({ type: settingInfo.selectSomething, payload: { ...filter, [settingInfo.changeValue]: value } })
+        } else {
+          dispatch({ type: settingInfo.selectAll, payload: { ...filter, [settingInfo.changeValue]: '' } })
+        }
       } else {
-        dispatch({ type: settingInfo.selectAll, payload: { ...filter, [settingInfo.changeValue]: '' } })
+        click(value)
       }
       setOpen(false)
     }
+    console.log(settingInfo)
     return(
       <FilterOptionDiv>
-        <IndexDiv>{settingInfo.type}</IndexDiv>
+        {settingInfo ? <IndexDiv>{settingInfo.type}</IndexDiv> : ''}
         <FilterSelectDiv onClick={() => setOpen(!open)}>
           <FilterOptionButton>{text}</FilterOptionButton>
           <FilterBoxArrow>
@@ -110,7 +115,7 @@ const FilterBox = ({data, settingInfo, filter}) => {
           </FilterBoxArrow>
         </FilterSelectDiv>
         <FilterComboOptionUl open={open}>
-          <FilterComboOptionList onClick={clickEvent}>전체</FilterComboOptionList>
+          {settingInfo ?  <FilterComboOptionList onClick={clickEvent}>전체</FilterComboOptionList> : ''}
           {data.map(el => <FilterComboOptionList onClick={clickEvent}>{el}</FilterComboOptionList>)}
         </FilterComboOptionUl>
       </FilterOptionDiv>

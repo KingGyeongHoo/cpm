@@ -1,30 +1,31 @@
 import { useEffect, useState, useMemo } from "react";
 import { styled } from "styled-components";
 import { useSelector, useDispatch } from "react-redux";
-import { FilterCombobox } from "./Left/Left";
-import TabInformation from "./TabInformation";
+
+import TabInformation from "./components/TabInformation";
+import Pallete from "../../Pallete";
+
 import AWS from "aws-sdk";
 
 const TabContainer = styled.div`
   display: flex;
   flex-direction: column;
   width: 15%;
-  border: 1px solid green;
+  height: 100%;
+  padding: 2% 1%;
+  color: ${Pallete.side_color_dark};
 `
 const TabList = styled.div`
   width: 90%;
   padding: 5%;
-`
-const InfoContainer = styled.div`
-  display: flex;
-  flex-direction: column;
-  width: 85%;
-  border: 1px solid green;
-`
-const GraphComboBox = styled(FilterCombobox)`
-  width: 20%;
-  margin: 2% 1%;
-  padding: 1% 0;
+  margin: 3% 0;
+  border-left: 5px solid ${props => props.selected ? '' : '{Pallete.side_color_dark}'};
+  font-weight: ${props => props.selected ? 'bold' : ''};
+  &:hover{
+    background-color: ${Pallete.side_color_dark};
+    color: ${Pallete.main_font_white};
+    border-radius: 10px;
+  }
 `
 
 export default function ChargerInfo({chargerIdArray}) {
@@ -32,7 +33,6 @@ export default function ChargerInfo({chargerIdArray}) {
   const [data, setData] = useState([]);
   const [allData, setAllData] = useState([])
   const info = useSelector(state => state.infoReducer)
-  const figure = useSelector(state => state.figureReducer)
   
   useEffect(() => {
     // AWS 설정
@@ -80,10 +80,18 @@ export default function ChargerInfo({chargerIdArray}) {
   useEffect(() => {
     setData(allData.filter((el) => parseInt(el.id) === info.id))
   }, [info])
+  const selectedIndex = useSelector(state => state.idxReducer)
   return (
     <>
       <TabContainer>
-        {["충전기 정보", "요일별 이용률", "일별 이용률", "통계"].map((el, idx) => <TabList onClick={() => dispatch({type: idx.toString()})}>{el}</TabList>)}
+        {["충전기 정보", "요일별 이용률", "일별 이용률", "통계"].map((el, idx) => {
+          return(
+            <TabList
+              onClick={() => dispatch({ type: idx.toString()})}
+              selected={selectedIndex === idx ? true : false}
+            >{el}</TabList>
+          )
+        })}
       </TabContainer>
       <TabInformation data={data} charger_sorted={charger_sorted}></TabInformation>
     </>

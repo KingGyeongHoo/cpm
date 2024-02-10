@@ -82,6 +82,7 @@ const ChargerSpan = styled.span`
   font-size: ${(props) => props.size}rem;
   color: ${(props) => props.color};
   margin-bottom: 1%;
+  text-shadow: ${props => props.shadow ? '0 1px 5px #9b9476' :  ''};
 `;
 
 const AllChargerInfo = ({ originData, setData }) => {
@@ -145,10 +146,10 @@ const AllChargerInfo = ({ originData, setData }) => {
                 <Chargers>
                     <ChargerInfoDiv>
                         <ChargerSpan color={Pallete.main_font_dark}>
-                            충전기 대수
+                            전체
                         </ChargerSpan>
                         <ChargerAmountDiv>
-                            <ChargerSpan size={window.innerWidth / 1000 + 0.5} color={Pallete.main_font_white}>
+                            <ChargerSpan size={window.innerWidth / 1000 + 0.5} color={Pallete.main_font_white} shadow={true}>
                                 {chargersInfoData.length}
                             </ChargerSpan>
                         </ChargerAmountDiv>
@@ -159,7 +160,7 @@ const AllChargerInfo = ({ originData, setData }) => {
                             완속
                         </ChargerSpan>
                         <ChargerAmountDiv>
-                            <ChargerSpan size={window.innerWidth / 1000 + 0.5} color={Pallete.main_font_white}>
+                            <ChargerSpan size={window.innerWidth / 1000 + 0.5} color={Pallete.main_font_white} shadow={true}>
                                 {chargersInfoData.filter((el) => el.type === "완속").length}
                             </ChargerSpan>
                         </ChargerAmountDiv>
@@ -169,7 +170,7 @@ const AllChargerInfo = ({ originData, setData }) => {
                             급속
                         </ChargerSpan>
                         <ChargerAmountDiv>
-                            <ChargerSpan size={window.innerWidth / 1000 + 0.5} color={Pallete.main_font_white}>
+                            <ChargerSpan size={window.innerWidth / 1000 + 0.5} color={Pallete.main_font_white} shadow={true}>
                                 {chargersInfoData.filter((el) => el.type.includes("급속")).length}
                             </ChargerSpan>
                         </ChargerAmountDiv>

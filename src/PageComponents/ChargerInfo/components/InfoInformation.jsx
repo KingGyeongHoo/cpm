@@ -1,6 +1,8 @@
 import { styled } from "styled-components";
 import { useSelector } from "react-redux";
 
+import { InfoContainer } from "./InfoDailyUsage";
+
 const RightDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -29,12 +31,13 @@ const InfoDetail = styled.div`
   width: 60%;
   font-size: 1.1rem;
 `
-export default function Information(){
+export default function Info_Information() {
   const info = useSelector(state => state.infoReducer)
-  return(
-    <RightDiv>
-      <InfoDiv>
-        <ul>
+  return (
+    <InfoContainer>
+      <RightDiv>
+        <InfoDiv>
+          <ul>
             <Info>
               <InfoText>충전소명</InfoText>
               <InfoDetail>{info.charger_name}</InfoDetail>
@@ -55,8 +58,10 @@ export default function Information(){
               <InfoText>시설구분</InfoText>
               <InfoDetail>{info.sub_category}</InfoDetail>
             </Info>
-        </ul>
-      </InfoDiv>
-    </RightDiv>
+          </ul>
+        </InfoDiv>
+      </RightDiv>
+    </InfoContainer>
+
   )
 }
