@@ -84,7 +84,7 @@ export default function ChargerInfo({chargerIdArray}) {
   return (
     <>
       <TabContainer>
-        {["충전기 정보", "요일별 이용률", "일별 이용률", "통계"].map((el, idx) => {
+        {["충전소 정보", "요일별 이용률", "일별 이용률", "통계"].map((el, idx) => {
           return(
             <TabList
               onClick={() => dispatch({ type: idx.toString()})}

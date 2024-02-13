@@ -19,6 +19,6 @@ export default function TabInformation({ data, charger_sorted }) {
         <InfoStatistics data={data} charger_sorted={charger_sorted}></InfoStatistics>
       )
     default:
-      <></>;
+      <InfoInformation></InfoInformation>;
   }
 }

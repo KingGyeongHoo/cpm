@@ -68,7 +68,7 @@ const ModalDivided = styled.div`
 const ModalListDividedDiv = styled.div`
   display: flex;
   flex-direction: column;
-  width: 50%;
+  width: 45%;
   justify-content: center;
   align-items: baseline;
   margin: 2% 2% 0 2%;
@@ -76,9 +76,9 @@ const ModalListDividedDiv = styled.div`
 const ModalList = styled.div`
   display: flex;
   flex-direction: row;
-  justify-content: center;
+  justify-content: space-evenly;
   align-items: center;
-  width: 100%;
+  width: 90%;
   padding: 2% 5%;
   z-index: 150;
   border-radius: 20px;
@@ -98,8 +98,13 @@ const NoChargerDiv = styled.div`
   z-index: 150;
 `
 const LocationName = styled.div`
-  width: 90%;
+  width: 75%;
 `;
+const TypeMark = styled.div`
+    width: 15%;
+    color: ${props => props.slow ? '#4db34d' : '#e6c404'};
+    font-size: 0.9rem;
+`
 const UseableMark = styled.div`
   width: 20px;
   height: 20px;
@@ -224,7 +229,24 @@ const Map = ({ data }) => {
                                 {filteredData.map((el) => {
                                     return (
                                         <ModalList onClick={() => setInfo(el)}>
-                                            <LocationName>{el.charger_name}</LocationName>
+                                            {el.charger_name.includes("완속")
+                                                ? (
+                                                    <>
+                                                        <LocationName>
+                                                            {el.charger_name.replace("완속", "").trim()}
+                                                        </LocationName>
+                                                        <TypeMark slow={true}>완속</TypeMark>
+                                                    </>
+                                                )
+                                            : (
+                                                <>
+                                                    <LocationName>
+                                                    {el.charger_name.replace("급속", "").trim()}
+                                                    </LocationName>
+                                                    <TypeMark slow={false}>급속</TypeMark>
+                                                </>
+                                            )
+                                            }
                                             <UseableMark></UseableMark>
                                         </ModalList>
                                     );
@@ -236,7 +258,24 @@ const Map = ({ data }) => {
                                 {filteredData.slice(0, parseInt(filteredData.length / 2)).map((el) => {
                                     return (
                                         <ModalList onClick={() => setInfo(el)}>
-                                            <LocationName>{el.charger_name}</LocationName>
+                                            {el.charger_name.includes("완속")
+                                                ? (
+                                                    <>
+                                                        <LocationName>
+                                                            {el.charger_name.replace("완속", "").trim()}
+                                                        </LocationName>
+                                                        <TypeMark slow={true}>완속</TypeMark>
+                                                    </>
+                                                )
+                                            : (
+                                                <>
+                                                    <LocationName>
+                                                    {el.charger_name.replace("급속", "").trim()}
+                                                    </LocationName>
+                                                    <TypeMark slow={false}>급속</TypeMark>
+                                                </>
+                                            )
+                                            }
                                             <UseableMark></UseableMark>
                                         </ModalList>
                                     );
@@ -246,7 +285,24 @@ const Map = ({ data }) => {
                                 {filteredData.slice(parseInt(filteredData.length / 2)).map((el) => {
                                     return (
                                         <ModalList onClick={() => setInfo(el)}>
-                                            <LocationName>{el.charger_name}</LocationName>
+                                            {el.charger_name.includes("완속")
+                                                ? (
+                                                    <>
+                                                        <LocationName>
+                                                            {el.charger_name.replace("완속", "").trim()}
+                                                        </LocationName>
+                                                        <TypeMark slow={true}>완속</TypeMark>
+                                                    </>
+                                                )
+                                            : (
+                                                <>
+                                                    <LocationName>
+                                                    {el.charger_name.replace("급속", "").trim()}
+                                                    </LocationName>
+                                                    <TypeMark slow={false}>급속</TypeMark>
+                                                </>
+                                            )
+                                            }
                                             <UseableMark></UseableMark>
                                         </ModalList>
                                     );
