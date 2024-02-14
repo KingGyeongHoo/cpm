@@ -22,6 +22,7 @@ const IndexContainer = styled.div`
   display: flex;
   flex-direction: row;
   justify-content: space-evenly;
+  margin: 3% 0;
 `
 const IndexBox = styled.div`
   display: flex;

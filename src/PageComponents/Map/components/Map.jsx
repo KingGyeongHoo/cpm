@@ -20,6 +20,20 @@ const ModalContainer = styled.div`
   left: 0;
   z-index: 50;
 `;
+const Loading = styled.div`
+    position: absolute;
+    display: ${(props) => (props.isLoading ? "flex" : "none")};
+    width: 100%;
+    height: 100%;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba(255, 255, 255, 0.5);
+    color: ${Pallete.main_color_dark};
+    font-size: 3rem;
+    top: 0;
+    left: 0;
+    z-index: 50;
+`
 const ModalDiv = styled.div`
   display: flex;
   flex-direction: column;
@@ -120,6 +134,7 @@ const Map = ({ data }) => {
     const [curChargerLocation, setCurChargerLocation] = useState();
     const filteredData = data.filter((el) => el.location === curChargerLocation);
     const [openModal, setOpenModal] = useState(false);
+    const [isLoading, setIsLoading] = useState(false)
     const [level, setLevel] = useState(5);
     const [curLocation, setCurLocation] = useState([
         33.50678335808446, 126.49279871079412,
@@ -130,6 +145,7 @@ const Map = ({ data }) => {
     }
 
     useEffect(() => {
+        setIsLoading(true)
         const container = document.getElementById("map");
         const options = {
             center: new kakao.maps.LatLng(curLocation[0], curLocation[1]),
@@ -138,7 +154,7 @@ const Map = ({ data }) => {
         const map = new kakao.maps.Map(container, options);
 
         var geocoder = new kakao.maps.services.Geocoder();
-        data.forEach((el) => {
+        data.forEach((el, idx) => {
             geocoder.addressSearch(
                 `${el.charger_address}`,
                 function (result, status) {
@@ -213,10 +229,13 @@ const Map = ({ data }) => {
                 }
             }
         }
+        setTimeout(() =>{
+            setIsLoading(false)
+        }, 2000)
     }, [data]);
-    console.log(openModal)
     return (
         <MapDiv id="map">
+            <Loading isLoading={isLoading}>로딩중...</Loading>
             <ModalContainer openModal={openModal}>
                 <ModalDiv>
                     <ModalCloseDiv onClick={() => setOpenModal(!openModal)}>

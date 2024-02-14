@@ -11,6 +11,7 @@
 }
 *{
   font-family: 'TheJamsil5Bold';
+  margin: 0;
 }
 .infowindow {
   display: flex;

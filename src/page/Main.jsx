@@ -1,5 +1,6 @@
 import { styled } from 'styled-components'
 import { useState, useEffect, useMemo } from 'react'
+import Title from '../PageComponents/Title/Title'
 import Left from '../PageComponents/Left/Left'
 import Center from '../PageComponents/Map/Center'
 import ChargerInfo from '../PageComponents/ChargerInfo/ChargerInfo'
@@ -17,23 +18,7 @@ const MainContainer = styled.div`
   background-color: ${Pallete.main_font_white};
   border-bottom: 10px solid ${Pallete.main_color_light};
 `
-const TitleContainer = styled.div`
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  width: 96%;
-`
-const TitleDiv = styled.div`
-  width: 10%;
-  font-size: 3rem;
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: center;
-  box-shadow: 10px 10px 1px #015aae;
-  margin-bottom: 1%;
-`
+
 const InformationContainer = styled.div`
   display: flex;
   flex-direction: row;
@@ -73,13 +58,10 @@ export default function Main(){
   const town = useMemo(() => [...new Set(data.map(el => el.town))], [data])
   return (
     <>
-      <TitleContainer>
-        <TitleDiv>CPM</TitleDiv>
-      </TitleContainer>
+      <Title></Title>
       <MainContainer>
         <Left category={category} town={town} />
         <Center serverData={data} />
-        {/* <Right /> */}
       </MainContainer>
       <InformationContainer>
         <ChargerInfo chargerIdArray={data.map(el => el.id.toString())} />
