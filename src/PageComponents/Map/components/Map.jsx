@@ -200,9 +200,15 @@ const Map = ({ data }) => {
                 }
             );
             if(idx === data.length - 1){
-                setTimeout(() =>{
+                if(data.length > 400){
+                  setTimeout(() =>{
+                    setIsLoading(false)
+                }, 3000)
+                } else {
+                  setTimeout(() =>{
                     setIsLoading(false)
                 }, 2000)
+              }  
             }
         });
         // 줌 할때마다 현재 레벨 가져오기
