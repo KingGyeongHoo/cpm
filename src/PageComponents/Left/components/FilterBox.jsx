@@ -51,7 +51,7 @@ const FilterComboOptionUl = styled.ul`
   position: absolute;
   top: 0;
   left: 0;
-  top: 80%;
+  top: 90%;
   left: 50%; /* 왼쪽 위치를 50%로 설정하여 부모 요소의 중앙에 위치 */
   transform: translateX(-50%); 
   width: 96%;
