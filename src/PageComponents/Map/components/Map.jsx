@@ -231,7 +231,7 @@ const Map = ({ data }) => {
         }
         setTimeout(() =>{
             setIsLoading(false)
-        }, 2000)
+        }, 4000)
     }, [data]);
     return (
         <MapDiv id="map">
