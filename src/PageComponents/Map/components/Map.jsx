@@ -10,7 +10,7 @@ const MapDiv = styled.div`
 `
 const ModalContainer = styled.div`
   position: absolute;
-  display: ${(props) => (props.openModal ? "flex" : "none")};
+  display: ${(props) => (props.openmodal ? "flex" : "none")};
   width: 100%;
   height: 100%;
   justify-content: center;
@@ -22,7 +22,7 @@ const ModalContainer = styled.div`
 `;
 const Loading = styled.div`
     position: absolute;
-    display: ${(props) => (props.isLoading ? "flex" : "none")};
+    display: ${(props) => (props.isloading ? "flex" : "none")};
     width: 100%;
     height: 100%;
     justify-content: center;
@@ -243,8 +243,8 @@ const Map = ({ data }) => {
     }, [data]);
     return (
         <MapDiv id="map">
-            <Loading isLoading={isLoading}>로딩중...</Loading>
-            <ModalContainer openModal={openModal}>
+            <Loading isloading={isLoading ? 'loading' : undefined}>로딩중...</Loading>
+            <ModalContainer openmodal={openModal ? 'open' : undefined}>
                 <ModalDiv>
                     <ModalCloseDiv onClick={() => setOpenModal(!openModal)}>
                         <ModalCloseButton src="https://www.svgrepo.com/show/521564/close.svg"></ModalCloseButton>

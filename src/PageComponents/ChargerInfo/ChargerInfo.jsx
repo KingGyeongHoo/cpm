@@ -87,6 +87,7 @@ export default function ChargerInfo({chargerIdArray}) {
         {["충전소 정보", "요일별 이용률", "일별 이용률", "통계"].map((el, idx) => {
           return(
             <TabList
+              key={idx}
               onClick={() => dispatch({ type: idx.toString()})}
               selected={selectedIndex === idx ? true : false}
             >{el}</TabList>

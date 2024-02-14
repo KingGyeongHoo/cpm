@@ -136,7 +136,7 @@ const AllChargerInfo = ({ originData, setData }) => {
                 </TypeDiv>
                 <AddressDiv>
                     <AddressIcon>
-                        <svg width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" stroke-width="0"></g><g id="SVGRepo_tracerCarrier" stroke-linecap="round" stroke-linejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 21C15.5 17.4 19 14.1764 19 10.2C19 6.22355 15.866 3 12 3C8.13401 3 5 6.22355 5 10.2C5 14.1764 8.5 17.4 12 21Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" stroke="#000000" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"></path> </g></svg>
+                        <svg width="32px" height="32px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><g id="SVGRepo_bgCarrier" strokeWidth="0"></g><g id="SVGRepo_tracerCarrier" strokeLinecap="round" strokeLinejoin="round"></g><g id="SVGRepo_iconCarrier"> <path d="M12 21C15.5 17.4 19 14.1764 19 10.2C19 6.22355 15.866 3 12 3C8.13401 3 5 6.22355 5 10.2C5 14.1764 8.5 17.4 12 21Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" stroke="#000000" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"></path> </g></svg>
                     </AddressIcon>
 
                     <span>{curAddress}</span>
@@ -149,7 +149,7 @@ const AllChargerInfo = ({ originData, setData }) => {
                             전체
                         </ChargerSpan>
                         <ChargerAmountDiv>
-                            <ChargerSpan size={window.innerWidth / 1000 + 0.5} color={Pallete.main_font_white} shadow={true}>
+                            <ChargerSpan size={window.innerWidth / 1000 + 0.5} color={Pallete.main_font_white} shadow='true'>
                                 {chargersInfoData.length}
                             </ChargerSpan>
                         </ChargerAmountDiv>
@@ -160,7 +160,7 @@ const AllChargerInfo = ({ originData, setData }) => {
                             완속
                         </ChargerSpan>
                         <ChargerAmountDiv>
-                            <ChargerSpan size={window.innerWidth / 1000 + 0.5} color={Pallete.main_font_white} shadow={true}>
+                            <ChargerSpan size={window.innerWidth / 1000 + 0.5} color={Pallete.main_font_white} shadow='true'>
                                 {chargersInfoData.filter((el) => el.type === "완속").length}
                             </ChargerSpan>
                         </ChargerAmountDiv>
@@ -170,7 +170,7 @@ const AllChargerInfo = ({ originData, setData }) => {
                             급속
                         </ChargerSpan>
                         <ChargerAmountDiv>
-                            <ChargerSpan size={window.innerWidth / 1000 + 0.5} color={Pallete.main_font_white} shadow={true}>
+                            <ChargerSpan size={window.innerWidth / 1000 + 0.5} color={Pallete.main_font_white} shadow='true'>
                                 {chargersInfoData.filter((el) => el.type.includes("급속")).length}
                             </ChargerSpan>
                         </ChargerAmountDiv>
