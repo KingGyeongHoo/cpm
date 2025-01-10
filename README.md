@@ -11,6 +11,8 @@ CPM은 사용 가능한 전기차 지도를 한눈에 보여주고. 충전기 �
 ### 📆개발 기간
 **2024.01~2024.02**
 
+**2025.01 (리팩토링)**
+
 ## ✏목차
 1. **기술 스택**
 2. **주요 기능**
@@ -18,7 +20,7 @@ CPM은 사용 가능한 전기차 지도를 한눈에 보여주고. 충전기 �
 4. **폴더 구조**
 
 ## 🛠기술 스택
-- **Frontend**: <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white"><img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"><img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"><img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"><img src="https://img.shields.io/badge/Styledcomponents-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=white"><img src="https://img.shields.io/badge/redux-764ABC?style=for-the-badge&logo=redux&logoColor=white"><img src="https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white">
+- **Frontend**: <img src="https://img.shields.io/badge/javascript-F7DF1E?style=for-the-badge&logo=javascript&logoColor=white"><img src="https://img.shields.io/badge/html5-E34F26?style=for-the-badge&logo=html5&logoColor=white"><img src="https://img.shields.io/badge/css-1572B6?style=for-the-badge&logo=css3&logoColor=white"><img src="https://img.shields.io/badge/react-61DAFB?style=for-the-badge&logo=react&logoColor=black"><img src="https://img.shields.io/badge/Styledcomponents-DB7093?style=for-the-badge&logo=styledcomponents&logoColor=white"><img src="https://img.shields.io/badge/redux-764ABC?style=for-the-badge&logo=redux&logoColor=white"><img src="https://img.shields.io/badge/axios-5A29E4?style=for-the-badge&logo=axios&logoColor=white"><img src="https://img.shields.io/badge/reactquery-FF4154?style=for-the-badge&logo=reactquery&logoColor=white">
 - **Backend**:  <img src="https://img.shields.io/badge/amazonaws-232F3E?style=for-the-badge&logo=amazonaws&logoColor=white"><img src="https://img.shields.io/badge/amazons3-569A31?style=for-the-badge&logo=amazons3&logoColor=white">
 - **Deployment**: <img src="https://img.shields.io/badge/netlify-00C7B7?style=for-the-badge&logo=netlify&logoColor=white">
 - **Other Tools**: <img src="https://img.shields.io/badge/git-F05032?style=for-the-badge&logo=git&logoColor=white"><img src="https://img.shields.io/badge/github-181717?style=for-the-badge&logo=github&logoColor=white"><img src="https://img.shields.io/badge/figma-F24E1E?style=for-the-badge&logo=figma&logoColor=white"><img src="https://img.shields.io/badge/photoshop-31A8FF?style=for-the-badge&logo=adobephotoshop&logoColor=white">
@@ -36,8 +38,10 @@ CPM은 사용 가능한 전기차 지도를 한눈에 보여주고. 충전기 �
 - **KakaoMap API를 사용한 지도 어플리케이션 렌더링**
   - KakaoMap API를 활용하여 지도 어플리케이션을 렌더링했습니다.
   - Marker 요소를 이용해 지도 위에 충전소 위치를 표시하고, 이벤트를 적용하여 사용자가 상호작용할 수 있도록 구현했습니다.
-- **aws-sdk 및 S3를 이용한 데이터 통신 및 위치 렌더링**
+- **aws-sdk 및 React-Query를 이용한 데이터 통신 및 위치 렌더링**
   - aws-sdk를 활용하여 AWS의 S3 서비스와 통신하고, 데이터를 받아와 충전소의 위치를 지도에 렌더링했습니다.
+  - React-Query를 사용해 저장소로부터 데이터를 받아오고, 로딩, 에러 페이지를 구현했습니다.
+  - 또한, 캐싱 기능을 활용하여 대용량의 데이터를 반복 요청 없이 사용하도록 하였습니다.
 - **충전소 클릭시 충전기명, 사용 가능 여부 표시**
   - 사용자가 선택한 조건에 부합하는 충전소들만을 지도에 표시했습니다. 이를 통해 사용자가 관심 있는 정보에 집중할 수 있도록 했습니다.
 - **지도 이동 위치에 따라 상단 지역 주소 변경**
