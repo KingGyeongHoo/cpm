@@ -55,16 +55,6 @@ export default function Main() {
   if (isLoading) return <Loading>로딩중</Loading>;
   if (isError) return <Error>에러가 발생했습니다!</Error>;
 
-  const allInfo = {
-    average_cost: Math.round(
-      data.reduce((acc, cur) => acc + cur.cost / 1, 0) / data.length
-    ),
-    average_usage: Math.round(
-      data.reduce((acc, cur) => acc + cur.useage / 1, 0) / data.length
-    ),
-  };
-  dispatch({ type: "SETINFO", figure: allInfo });
-
   const category = [...new Set(data.map((el) => el.main_category))];
   const town = [...new Set(data.map((el) => el.town))];
 

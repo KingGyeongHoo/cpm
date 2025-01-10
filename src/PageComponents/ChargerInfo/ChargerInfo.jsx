@@ -64,6 +64,16 @@ export default function ChargerInfo({ chargerIdArray }) {
     });
   };
 
+  const allInfo = {
+    average_cost: Math.round(
+      data.reduce((acc, cur) => acc + cur.cost / 1, 0) / data.length
+    ),
+    average_usage: Math.round(
+      data.reduce((acc, cur) => acc + cur.useage / 1, 0) / data.length
+    ),
+  };
+  dispatch({ type: "SETINFO", figure: allInfo });
+
   const filteredData = data.filter((el) => parseInt(el.id) === info.id);
   return (
     <>
